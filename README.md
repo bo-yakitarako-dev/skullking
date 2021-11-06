@@ -25,7 +25,7 @@ $ git config --list --global
 
 したら好きなフォルダでこのリポジトリをcloneしようね
 ```shell
-$ git clone https://github.com/bo-yakitarako/skullking.git
+$ git clone https://github.com/bo-yakitarako-dev/skullking.git
 ```
 
 OK

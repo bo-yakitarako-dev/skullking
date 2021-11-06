@@ -78,6 +78,8 @@ const StartNameForm: React.FC<Props> = ({ setCanEdit }) => {
             })}
             placeholder="名前を入力"
             color="white"
+            width="52"
+            maxWidth="52"
           />
           <Text
             color="red.400"

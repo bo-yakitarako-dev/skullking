@@ -73,6 +73,7 @@ const Start: React.FC = () => {
           hasArrow
           bg="red.600"
           isDisabled={canStart}
+          fontFamily="'Hachi Maru Pop', cursive"
         >
           <Box width="fit-content" marginX="auto" marginY="8">
             <Button width="64" size="lg" fontSize="xl" disabled={!canStart}>

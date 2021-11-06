@@ -1,14 +1,10 @@
 import { Response } from 'express';
-import type { PostReq, SocketIO } from '../index';
+import type { PostReq, Socket, SocketIO } from '../index';
 import { Player } from './Player';
 
 export let players: Player[] = [];
 
 export const createRegistryFunction = (io: SocketIO) => {
-  const firstMembers = () => {
-    io.emit('startPlayers', [...players.map((p) => p.createTitleJson())]);
-  };
-
   const createPlayer = (req: PostReq<{ name: string }>, res: Response) => {
     const playerId = players.length + 1;
     const addedPlayer = new Player(playerId, req.body.name);
@@ -34,5 +30,9 @@ export const createRegistryFunction = (io: SocketIO) => {
     res.json({ ok: true, name });
   };
 
-  return { firstMembers, createPlayer, rename };
+  const sendStartPlayers = (socket: Socket) => {
+    socket.emit('startPlayers', [...players.map((p) => p.createTitleJson())]);
+  };
+
+  return { createPlayer, rename, sendStartPlayers };
 };
