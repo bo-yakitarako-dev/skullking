@@ -1,11 +1,11 @@
 import { Card } from '../cardDealing/card';
 import { Player } from '../userRegistry/Player';
 
-const taro: Player = new Player(0, 'Taro');
+const taro = new Player(0, 'Taro');
 
-const card1: Card = new Card(1, 'skullking', 100);
-const card2: Card = new Card(2, 'pirates', 50);
-const card3: Card = new Card(3, 'green', 10);
+const card1 = new Card(1, 'skullking', 100);
+const card2 = new Card(2, 'pirates', 50);
+const card3 = new Card(3, 'green', 10);
 
 taro.receiveCard(card2);
 taro.receiveCard(card3);

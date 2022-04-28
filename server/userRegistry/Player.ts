@@ -4,7 +4,7 @@ export class Player {
   private name: string;
   private prediction: number;
   private hand: Card[] = [];
-  private score: number[] = [];
+  private scores: number[] = [];
 
   constructor(playerId: number, name: string) {
     this.playerId = playerId;
@@ -30,7 +30,7 @@ export class Player {
   }
 
   public writeScore(score: number) {
-    this.score.push(score);
+    this.scores.push(score);
   }
 
   public receiveCard(card: Card) {
@@ -50,8 +50,7 @@ export class Player {
   }
 
   public useCard(i: number) {
-    const card: Card[] = this.hand.splice(i, 1);
-    return card[0];
+    return this.hand.splice(i, 1)[0];
   }
 
   public getHand() {
@@ -63,7 +62,7 @@ export class Player {
   }
 
   public getScore() {
-    return this.score;
+    return this.scores;
   }
 
   public sample(i: number) {
