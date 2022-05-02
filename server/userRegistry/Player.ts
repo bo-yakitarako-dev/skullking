@@ -3,6 +3,7 @@ export class Player {
   private playerId: number;
   private name: string;
   private prediction: number;
+  private victory: number;
   private hand: Card[] = [];
   private scores: number[] = [];
 
@@ -10,6 +11,7 @@ export class Player {
     this.playerId = playerId;
     this.name = name;
     this.prediction = -1; //プレイ前の値は-1とする
+    this.victory = 0;
   }
 
   public isPlayerId(playerId: number) {
@@ -27,6 +29,14 @@ export class Player {
 
   public predict(prediction: number) {
     this.prediction = prediction;
+  }
+
+  public win() {
+    this.victory++;
+  }
+
+  public resetVictory() {
+    this.victory = 0;
   }
 
   public writeScore(score: number) {
@@ -61,11 +71,11 @@ export class Player {
     return this.prediction;
   }
 
-  public getScore() {
-    return this.scores;
+  public getVictory() {
+    return this.victory;
   }
 
-  public sample(i: number) {
-    return this.hand[i].getId();
+  public getScore() {
+    return this.scores;
   }
 }

@@ -11,12 +11,14 @@ type Color =
   | 'treasure'
   | 'kraken';
 export class Card {
+  private static sum = 0;
   private cardId: number;
   private color: Color;
   private strength: number;
 
-  constructor(cardId: number, color: Color, strength: number) {
-    this.cardId = cardId;
+  constructor(color: Color, strength: number) {
+    Card.sum++;
+    this.cardId = Card.sum;
     this.color = color;
     this.strength = strength;
   }
