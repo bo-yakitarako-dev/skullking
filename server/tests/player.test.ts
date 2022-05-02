@@ -3,9 +3,9 @@ import { Player } from '../userRegistry/Player';
 
 const taro = new Player(0, 'Taro');
 
-const card1 = new Card(1, 'skullking', 100);
-const card2 = new Card(2, 'pirates', 50);
-const card3 = new Card(3, 'green', 10);
+const card1 = new Card('skullking', 100);
+const card2 = new Card('pirates', 50);
+const card3 = new Card('green', 10);
 
 taro.receiveCard(card2);
 taro.receiveCard(card3);

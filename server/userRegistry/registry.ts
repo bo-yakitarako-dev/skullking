@@ -3,6 +3,7 @@ import type { PostReq, Socket, SocketIO } from '../index';
 import { Player } from './Player';
 
 export let players: Player[] = [];
+export let state: 0 | 1 = 0;
 
 export const createRegistryFunction = (io: SocketIO) => {
   const createPlayer = (req: PostReq<{ name: string }>, res: Response) => {
@@ -34,5 +35,15 @@ export const createRegistryFunction = (io: SocketIO) => {
     socket.emit('startPlayers', [...players.map((p) => p.createTitleJson())]);
   };
 
-  return { createPlayer, rename, sendStartPlayers };
+  const startGame = () => {
+    state = 1;
+    io.emit('startGame');
+  };
+
+  const finishGame = () => {
+    state = 0;
+    io.emit('finishGame');
+  };
+
+  return { createPlayer, rename, sendStartPlayers, startGame, finishGame };
 };
