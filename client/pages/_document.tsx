@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/layout';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
 export default class AppDocument extends Document {
@@ -18,8 +19,10 @@ export default class AppDocument extends Document {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <body>
-          <Main />
-          <NextScript />
+          <Box fontFamily="'Hachi Maru Pop', cursive">
+            <Main />
+            <NextScript />
+          </Box>
         </body>
       </Html>
     );
