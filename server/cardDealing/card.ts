@@ -34,4 +34,9 @@ export class Card {
   public getStrength() {
     return this.strength;
   }
+
+  public convertJson() {
+    const { cardId, color, strength } = this;
+    return { cardId, color, strength };
+  }
 }

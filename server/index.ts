@@ -2,7 +2,8 @@ import express, { Request } from 'express';
 import next from 'next';
 import { Server, Socket as _Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { createRegistryFunction, state } from './userRegistry/registry';
+import { createRegistryFunction } from './userRegistry/registry';
+import { gameFunction, state } from './mainGame/gameFunction';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PostReq<Body> = Request<any, any, Body>;
@@ -46,19 +47,22 @@ app.prepare().then(() => {
   });
 
   const io = new Server(httpServer);
-  const { createPlayer, rename, sendStartPlayers, startGame, finishGame } =
-    createRegistryFunction(io);
+  const { createPlayer, rename, sendStartPlayers } = createRegistryFunction(io);
+  const { startGame, finishGame, predict, useCard } = gameFunction(io);
 
   server.post('/api/createPlayer', createPlayer);
   server.post('/api/renamePlayer', rename);
+
   server.post('/api/startGame', startGame);
   server.post('/api/finishGame', finishGame);
+  server.post('/api/predict', predict);
+  server.post('/api/useCard', useCard);
 
   io.on('connection', (socket) => {
     if (dev) {
       console.log(`${infoHead} WebSocketサーバー接続!\x1b[0m`);
     }
-    if (state === 0) {
+    if (state === 'playing') {
       sendStartPlayers(socket);
     } else {
       socket.emit('nowPlaying');

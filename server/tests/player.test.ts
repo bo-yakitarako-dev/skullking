@@ -1,20 +1,30 @@
-import { Card } from '../cardDealing/card';
 import { Player } from '../userRegistry/Player';
+import { players, sort } from '../userRegistry/registry';
 
 const taro = new Player(0, 'Taro');
+const jiro = new Player(1, 'Jiro');
+const shiro = new Player(2, 'Shiro');
+const kiyoshi = new Player(3, 'Kiyoshi');
 
-const card1 = new Card('skullking', 100);
-const card2 = new Card('pirates', 50);
-const card3 = new Card('green', 10);
+players.push(taro);
+players.push(jiro);
+players.push(shiro);
+players.push(kiyoshi);
 
-taro.receiveCard(card2);
-taro.receiveCard(card3);
-taro.receiveCard(card1);
+sort(2);
 
 test('test', () => {
-  expect(taro.getHand()[0].getId()).toBe(1);
+  expect(players[0].getId()).toBe(2);
 });
 
 test('test2', () => {
-  expect(taro.getHand()[1].getId()).toBe(2);
+  expect(players[1].getId()).toBe(3);
+});
+
+test('test3', () => {
+  expect(players[2].getId()).toBe(0);
+});
+
+test('test4', () => {
+  expect(players[3].getId()).toBe(1);
 });
