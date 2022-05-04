@@ -53,6 +53,7 @@ const StartNameForm: React.FC<Props> = ({ setCanEdit }) => {
       const param = { name };
       const res = await post<{ playerId: number }>('/api/createPlayer', param);
       if (res.ok) {
+        localStorage.playerId = res.playerId;
         setStorePlayerId(res.playerId);
         setCanEdit(false);
       }

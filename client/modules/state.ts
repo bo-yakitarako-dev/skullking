@@ -1,8 +1,14 @@
 import { atom, selector } from 'recoil';
 
+let defaultPlayerId = 0;
+
+if (typeof window !== 'undefined' && localStorage.playerId) {
+  defaultPlayerId = Number(localStorage.playerId);
+}
+
 export const playerIdState = atom({
   key: 'playerIdState',
-  default: 0,
+  default: defaultPlayerId,
 });
 
 export const nameState = atom({

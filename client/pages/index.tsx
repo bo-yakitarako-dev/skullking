@@ -3,8 +3,10 @@ import Head from 'next/head';
 import { PlayerCountSP } from '../components/start/PlayerCountSP';
 import { Start } from '../components/start/Start';
 import { StartPlayerList } from '../components/start/StartPlayerList';
+import { usePlayerIdStorage } from '../modules/hooks/usePlayerIdStorage';
 
 const Home: NextPage = () => {
+  usePlayerIdStorage();
   return (
     <>
       <Head>
