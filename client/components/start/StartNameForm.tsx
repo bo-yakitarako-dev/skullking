@@ -55,6 +55,7 @@ const StartNameForm: React.FC<Props> = ({ setCanEdit }) => {
       if (res.ok) {
         setStorePlayerId(res.playerId);
         setCanEdit(false);
+        await post('/api/setSession', { playerId: res.playerId });
       }
     } else {
       const param = { name, playerId };

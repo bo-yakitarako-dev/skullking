@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/button';
 import { Box, Text } from '@chakra-ui/layout';
 import { useBreakpointValue } from '@chakra-ui/media-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { nameState, playerIdState } from '../../modules/state';
 import { StartNameForm } from './StartNameForm';
@@ -11,6 +11,13 @@ const NameBox: React.FC = () => {
   const name = useRecoilValue(nameState);
   const playerId = useRecoilValue(playerIdState);
   const [canEdit, setCanEdit] = useState(true);
+
+  useEffect(() => {
+    if (playerId !== 0) {
+      setCanEdit(false);
+    }
+  }, [playerId]);
+
   if (playerId === 0 || canEdit) {
     return <StartNameForm setCanEdit={setCanEdit} />;
   }

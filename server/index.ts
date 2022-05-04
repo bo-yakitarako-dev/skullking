@@ -2,7 +2,11 @@ import express, { Request } from 'express';
 import next from 'next';
 import { Server, Socket as _Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { createRegistryFunction, state } from './userRegistry/registry';
+import {
+  createRegistryFunction,
+  players,
+  state,
+} from './userRegistry/registry';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PostReq<Body> = Request<any, any, Body>;
@@ -53,6 +57,11 @@ app.prepare().then(() => {
   server.post('/api/renamePlayer', rename);
   server.post('/api/startGame', startGame);
   server.post('/api/finishGame', finishGame);
+
+  server.get('/api/getStartPlayers', (req, res) => {
+    const startPlayers = players.map((p) => p.createTitleJson());
+    res.json({ ok: true, players: startPlayers });
+  });
 
   io.on('connection', (socket) => {
     if (dev) {
