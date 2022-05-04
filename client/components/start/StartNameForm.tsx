@@ -3,9 +3,13 @@ import { Input } from '@chakra-ui/input';
 import { Box, Text } from '@chakra-ui/layout';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { post } from '../../modules/http';
-import { nameState, playerIdState } from '../../modules/state';
+import {
+  nameState,
+  playerIdState,
+  startPlayersState,
+} from '../../modules/state';
 
 type NameForm = {
   name: string;
@@ -18,6 +22,7 @@ type Props = {
 const StartNameForm: React.FC<Props> = ({ setCanEdit }) => {
   const [value, setStoreName] = useRecoilState(nameState);
   const [playerId, setStorePlayerId] = useRecoilState(playerIdState);
+  const players = useRecoilValue(startPlayersState);
 
   const {
     register,
@@ -49,7 +54,8 @@ const StartNameForm: React.FC<Props> = ({ setCanEdit }) => {
   const isValidName = typeof errors.name === 'undefined';
 
   const onSubmit: SubmitHandler<NameForm> = async ({ name }) => {
-    if (playerId === 0) {
+    const player = players.find((p) => p.playerId === playerId);
+    if (player === undefined) {
       const param = { name };
       const res = await post<{ playerId: number }>('/api/createPlayer', param);
       if (res.ok) {
