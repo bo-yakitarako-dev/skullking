@@ -1,10 +1,8 @@
 import { atom, selector } from 'recoil';
 
-const defaultPlayerId = 0;
-
 export const playerIdState = atom({
   key: 'playerIdState',
-  default: defaultPlayerId,
+  default: 0,
 });
 
 export const nameState = atom({
