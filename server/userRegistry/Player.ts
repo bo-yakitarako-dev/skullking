@@ -10,12 +10,16 @@ export class Player {
   constructor(playerId: number, name: string) {
     this.playerId = playerId;
     this.name = name;
-    this.prediction = -1; //プレイ前の値は-1とする
+    this.prediction = -1; //未定は-1とする
     this.victory = 0;
   }
 
   public isPlayerId(playerId: number) {
     return this.playerId === playerId;
+  }
+
+  public getId() {
+    return this.playerId;
   }
 
   public rename(name: string) {
@@ -27,16 +31,23 @@ export class Player {
     return { playerId, name };
   }
 
+  public infoJson() {
+    const { playerId, name, prediction, victory, scores } = this;
+    const hand = [...this.hand.map((p) => p.convertJson())];
+    return { playerId, name, prediction, victory, hand, scores };
+  }
+
   public predict(prediction: number) {
     this.prediction = prediction;
   }
 
-  public win() {
-    this.victory++;
+  public reset() {
+    this.prediction = -1;
+    this.victory = 0;
   }
 
-  public resetVictory() {
-    this.victory = 0;
+  public win() {
+    this.victory++;
   }
 
   public writeScore(score: number) {
@@ -59,7 +70,8 @@ export class Player {
     }
   }
 
-  public useCard(i: number) {
+  public useCard(id: number) {
+    const i = this.hand.findIndex((card) => card.getId() === id);
     return this.hand.splice(i, 1)[0];
   }
 

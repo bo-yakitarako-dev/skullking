@@ -1,7 +1,8 @@
 import { Card } from './card';
 
-export const deck: Card[] = [];
-export const discard: Card[] = [];
+export let deck: Card[] = [];
+export let discard: Card[] = [];
+export let tableCards: Card[] = [];
 
 deck.push(new Card('skullking', 15));
 for (let i = 0; i < 5; i++) {
@@ -30,3 +31,21 @@ for (let i = 14; i > 0; i--) {
 for (let i = 14; i > 0; i--) {
   deck.push(new Card('yellow', i));
 }
+
+export function shuffle<T>(arr: T[]) {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+export const addAndShuffle = () => {
+  deck = [...deck, ...discard];
+  discard = [];
+  shuffle(deck);
+};
+
+export const discardTheCards = () => {
+  discard = [...discard, ...tableCards];
+  tableCards = [];
+};
