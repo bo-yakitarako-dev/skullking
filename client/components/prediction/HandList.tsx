@@ -24,6 +24,7 @@ const HandList: React.FC = () => {
         fontSize="3xl"
         paddingX="16px"
         backgroundColor="gray.900"
+        whiteSpace="nowrap"
       >
         手札
       </Text>

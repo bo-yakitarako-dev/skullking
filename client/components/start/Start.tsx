@@ -7,6 +7,8 @@ import { useBreakpointValue } from '@chakra-ui/media-query';
 import { NameBox } from './NameBox';
 import { useRecoilValue } from 'recoil';
 import { playerCountSelector } from '../../modules/state';
+import { useCallback } from 'react';
+import { post } from '../../modules/http';
 
 const setCrowdyKeyframe = (rotate: number) => `
   0%, 100% {
@@ -21,6 +23,11 @@ const Start: React.FC = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const playerCount = useRecoilValue(playerCountSelector);
   const canStart = playerCount >= 2 && playerCount <= 6;
+
+  const startGame = useCallback(() => {
+    post('/api/startGame');
+  }, []);
+
   return (
     <Box
       width="100%"
@@ -75,7 +82,13 @@ const Start: React.FC = () => {
           fontFamily="'Hachi Maru Pop', cursive"
         >
           <Box width="fit-content" marginX="auto" marginY="8">
-            <Button width="64" size="lg" fontSize="xl" disabled={!canStart}>
+            <Button
+              width="64"
+              size="lg"
+              fontSize="xl"
+              disabled={!canStart}
+              onClick={startGame}
+            >
               はじめる
             </Button>
           </Box>
