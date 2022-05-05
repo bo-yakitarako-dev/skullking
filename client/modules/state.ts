@@ -17,17 +17,10 @@ export const nameState = atom({
   default: '',
 });
 
-export type StartPlayer = { playerId: number; name: string };
-
-export const startPlayersState = atom({
-  key: 'startPlayersState',
-  default: [] as StartPlayer[],
-});
-
 export const playerCountSelector = selector({
   key: 'playerCountSelector',
   get: ({ get }) => {
-    const { length } = get(startPlayersState);
+    const { length } = get(playersState);
     return length;
   },
 });

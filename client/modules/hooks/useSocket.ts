@@ -8,14 +8,11 @@ import {
   Player,
   playerIdState,
   playersState,
-  StartPlayer,
 } from '../state';
-import { startPlayersState } from '../state';
 
 const socket = io();
 
 export const useSocket = () => {
-  const setStartPlayers = useSetRecoilState(startPlayersState);
   const setPlayers = useSetRecoilState(playersState);
   const setGameStatus = useSetRecoilState(gameStatusState);
   const setName = useSetRecoilState(nameState);
@@ -24,17 +21,14 @@ export const useSocket = () => {
   const router = useRouter();
 
   useEffect(() => {
-    socket.on('startPlayers', (players: StartPlayer[]) => {
-      setStartPlayers(players);
+    socket.on('playerInfo', (players: Player[]) => {
+      setPlayers(players);
       if (
         router.pathname !== '/' &&
         !players.some((player) => player.playerId === playerId)
       ) {
         router.push('/');
       }
-    });
-    socket.on('playerInfo', (players: Player[]) => {
-      setPlayers(players);
     });
     socket.on('startRound', () => {
       setGameStatus('playing');

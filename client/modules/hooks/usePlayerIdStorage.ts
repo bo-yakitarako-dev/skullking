@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { nameState, playerIdState, startPlayersState } from '../state';
+import { nameState, playerIdState, playersState } from '../state';
 
 export const usePlayerIdStorage = () => {
   const playerId = useRecoilValue(playerIdState);
-  const players = useRecoilValue(startPlayersState);
+  const players = useRecoilValue(playersState);
   const [name, setName] = useRecoilState(nameState);
 
   useEffect(() => {

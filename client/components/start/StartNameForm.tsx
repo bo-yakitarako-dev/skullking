@@ -5,11 +5,7 @@ import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { post } from '../../modules/http';
-import {
-  nameState,
-  playerIdState,
-  startPlayersState,
-} from '../../modules/state';
+import { nameState, playerIdState, playersState } from '../../modules/state';
 
 type NameForm = {
   name: string;
@@ -22,7 +18,7 @@ type Props = {
 const StartNameForm: React.FC<Props> = ({ setCanEdit }) => {
   const [value, setStoreName] = useRecoilState(nameState);
   const [playerId, setStorePlayerId] = useRecoilState(playerIdState);
-  const players = useRecoilValue(startPlayersState);
+  const players = useRecoilValue(playersState);
 
   const {
     register,

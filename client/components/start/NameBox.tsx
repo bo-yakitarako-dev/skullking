@@ -3,18 +3,14 @@ import { Box, Text } from '@chakra-ui/layout';
 import { useBreakpointValue } from '@chakra-ui/media-query';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import {
-  nameState,
-  playerIdState,
-  startPlayersState,
-} from '../../modules/state';
+import { nameState, playerIdState, playersState } from '../../modules/state';
 import { StartNameForm } from './StartNameForm';
 
 const NameBox: React.FC = () => {
   const isMobile = useBreakpointValue({ base: true, sm: false });
   const name = useRecoilValue(nameState);
   const playerId = useRecoilValue(playerIdState);
-  const players = useRecoilValue(startPlayersState);
+  const players = useRecoilValue(playersState);
   const [canEdit, setCanEdit] = useState(true);
 
   useEffect(() => {

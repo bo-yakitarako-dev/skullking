@@ -26,11 +26,6 @@ export class Player {
     this.name = name;
   }
 
-  public createTitleJson() {
-    const { playerId, name } = this;
-    return { playerId, name };
-  }
-
   public infoJson() {
     const { playerId, name, prediction, victory, scores } = this;
     const hand = [...this.hand.map((p) => p.convertJson())];
