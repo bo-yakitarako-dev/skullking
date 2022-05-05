@@ -23,12 +23,6 @@ export const useSocket = () => {
   useEffect(() => {
     socket.on('playerInfo', (players: Player[]) => {
       setPlayers(players);
-      if (
-        router.pathname !== '/' &&
-        !players.some((player) => player.playerId === playerId)
-      ) {
-        router.push('/');
-      }
     });
     socket.on('startRound', () => {
       setGameStatus('playing');
@@ -43,6 +37,7 @@ export const useSocket = () => {
       setName('');
       setPlayerId(0);
       localStorage.removeItem('playerId');
+      router.replace('/');
     });
   }, [router, playerId]); // eslint-disable-line react-hooks/exhaustive-deps
 };

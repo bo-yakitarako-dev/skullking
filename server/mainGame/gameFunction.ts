@@ -20,20 +20,24 @@ export const gameFunction = (io: SocketIO) => {
     io.emit('playerInfo', [...players.map((p) => p.infoJson())]);
   };
 
-  const startGame = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const startGame = (req: any, res: Response) => {
     state = 'playing';
     shuffle(deck);
     startRound();
     sendInfo();
     io.emit('startRound', round);
+    res.json({ ok: true });
   };
 
-  const finishGame = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const finishGame = (req: any, res: Response) => {
     state = 'ready';
     round = 0;
     resetRegistry();
     addAndShuffle();
     io.emit('finishGame');
+    res.json({ ok: true });
   };
 
   const predict = (
@@ -78,7 +82,7 @@ export const gameFunction = (io: SocketIO) => {
       if (players[players.length].getHand().length === 0) {
         calcScore();
         if (round === 10) {
-          finishGame();
+          finishGame(req, res);
         } else {
           startRound();
           io.emit('startRound', round);
