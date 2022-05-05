@@ -1,10 +1,12 @@
-import { Flex, VStack } from '@chakra-ui/layout';
+import Head from 'next/head';
+import { Flex, Heading, VStack } from '@chakra-ui/layout';
 import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { CardType } from '../components/common/Card';
 import { HandList } from '../components/prediction/HandList';
 import { Order } from '../components/prediction/Order';
 import { Player, playersState } from '../modules/state';
+import { PredictForm } from '../components/prediction/PredictForm';
 
 const cards: CardType[] = [
   { cardId: 1, color: 'green', strength: 1 },
@@ -53,12 +55,25 @@ const Predict: React.FC = () => {
     setPlayers(players);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
-    <VStack height="100vh" justifyContent="center">
-      <Flex gridGap={8}>
-        <HandList />
-        <Order />
-      </Flex>
-    </VStack>
+    <>
+      <Head>
+        <title>勝利数を予想しようね</title>
+      </Head>
+      <VStack height="100vh" justifyContent="center">
+        <Heading
+          fontFamily="'Hachi Maru Pop', cursive"
+          marginBottom={12}
+          color="white"
+        >
+          勝利数を予想しよう
+        </Heading>
+        <Flex gridGap={8}>
+          <HandList />
+          <Order />
+        </Flex>
+        <PredictForm />
+      </VStack>
+    </>
   );
 };
 
