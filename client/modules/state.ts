@@ -53,3 +53,8 @@ export const gameStatusState = atom({
   key: 'gameStatusState',
   default: 'ready' as GameStatus,
 });
+
+export const startSliderState = atom({
+  key: 'startSliderState',
+  default: false,
+});

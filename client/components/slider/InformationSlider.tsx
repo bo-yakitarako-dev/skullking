@@ -1,29 +1,31 @@
 import { Flex } from '@chakra-ui/layout';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { RecoilState, useRecoilState } from 'recoil';
 
 type Props = {
-  startFadeIn: boolean;
-  setStartFadeIn: Dispatch<SetStateAction<boolean>>;
-  onDisplay: () => void;
+  state: RecoilState<boolean>;
+  redirectPath?: string;
   displayTime?: number;
 };
 
 const InformationSlider: React.FC<Props> = ({
   children,
-  startFadeIn,
-  setStartFadeIn,
-  onDisplay,
+  state,
+  redirectPath = '/',
   displayTime = 4000,
 }) => {
   const [positionX, setPositionX] = useState('-100%');
   const [canAnimate, setCanAnimate] = useState(true);
+  const [startFadeIn, setStartFadeIn] = useRecoilState(state);
+  const router = useRouter();
 
   useEffect(() => {
     if (startFadeIn) {
       setStartFadeIn(false);
       setPositionX('0');
       setTimeout(() => {
-        onDisplay();
+        router.push(redirectPath);
         setTimeout(() => {
           setPositionX('100%');
           setTimeout(() => {
@@ -36,7 +38,7 @@ const InformationSlider: React.FC<Props> = ({
         }, displayTime);
       }, 2000);
     }
-  }, [startFadeIn, onDisplay, displayTime, setStartFadeIn]);
+  }, [startFadeIn, setStartFadeIn, router, redirectPath, displayTime]);
 
   return (
     <Flex
