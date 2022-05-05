@@ -54,3 +54,9 @@ export const playerSelector = selector({
     return players.find((player) => player.playerId === playerId) ?? null;
   },
 });
+
+type GameStatus = 'ready' | 'playing';
+export const gameStatusState = atom({
+  key: 'gameStatusState',
+  default: 'ready' as GameStatus,
+});
