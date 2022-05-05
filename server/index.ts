@@ -62,7 +62,7 @@ app.prepare().then(() => {
     if (dev) {
       console.log(`${infoHead} WebSocketサーバー接続!\x1b[0m`);
     }
-    if (state === 'playing') {
+    if (state === 'ready') {
       sendStartPlayers(socket);
     } else {
       socket.emit('nowPlaying');
