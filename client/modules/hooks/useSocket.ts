@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { io } from 'socket.io-client';
 import {
   gameStatusState,
@@ -19,13 +19,19 @@ export const useSocket = () => {
   const setPlayers = useSetRecoilState(playersState);
   const setGameStatus = useSetRecoilState(gameStatusState);
   const setName = useSetRecoilState(nameState);
-  const setPlayerId = useSetRecoilState(playerIdState);
+  const [playerId, setPlayerId] = useRecoilState(playerIdState);
 
   const router = useRouter();
 
   useEffect(() => {
     socket.on('startPlayers', (players: StartPlayer[]) => {
       setStartPlayers(players);
+      if (
+        router.pathname !== '/' &&
+        !players.some((player) => player.playerId === playerId)
+      ) {
+        router.push('/');
+      }
     });
     socket.on('playerInfo', (players: Player[]) => {
       setPlayers(players);
@@ -44,15 +50,5 @@ export const useSocket = () => {
       setPlayerId(0);
       localStorage.removeItem('playerId');
     });
-    return () => {
-      socket.close();
-    };
-  }, [
-    setStartPlayers,
-    setGameStatus,
-    setPlayers,
-    router,
-    setName,
-    setPlayerId,
-  ]);
+  }, [router, playerId]); // eslint-disable-line react-hooks/exhaustive-deps
 };
