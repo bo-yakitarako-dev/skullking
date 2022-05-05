@@ -80,8 +80,7 @@ const Card: React.FC<Props> = ({ card, invalid = false, onClick }) => {
       }
       _hover={{
         cursor: invalid ? 'not-allowed' : onClick ? 'pointer' : 'default',
-        transform:
-          invalid || onClick === undefined ? undefined : 'translateY(-16px)',
+        transform: invalid || !onClick ? undefined : 'translateY(-16px)',
       }}
     >
       {number !== null ? (
