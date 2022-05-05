@@ -26,7 +26,7 @@ export const useSocket = () => {
     });
     socket.on('startRound', () => {
       setGameStatus('playing');
-      router.replace('/predict');
+      router.push('/predict');
     });
     socket.on('nowPlaying', () => {
       setGameStatus('playing');
