@@ -9,7 +9,6 @@ const Home: NextPage = () => {
     <>
       <Head>
         <title>すかるきんぐ</title>
-        <meta name="description" content="お前も神ゲーにならないか？" />
       </Head>
       <main>
         <Start />

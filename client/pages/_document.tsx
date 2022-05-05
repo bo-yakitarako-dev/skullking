@@ -17,6 +17,7 @@ export default class AppDocument extends Document {
             rel="stylesheet"
           />
           <link rel="icon" href="/favicon.ico" />
+          <meta name="description" content="お前も神ゲーにならないか？" />
         </Head>
         <body>
           <Box fontFamily="'Hachi Maru Pop', cursive">
