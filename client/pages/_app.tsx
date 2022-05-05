@@ -13,7 +13,10 @@ export default function App({ Component, pageProps }: AppProps) {
           <Box display={{ base: 'block', md: 'none' }}>
             <InvalidSP />
           </Box>
-          <Box display={{ base: 'none', md: 'block' }}>
+          <Box
+            display={{ base: 'none', md: 'block' }}
+            backgroundColor="gray.900"
+          >
             <Component {...pageProps} />
           </Box>
         </SocketProvider>
