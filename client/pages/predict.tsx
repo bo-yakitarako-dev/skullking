@@ -1,5 +1,10 @@
-import { Box } from '@chakra-ui/layout';
-import { Card, CardType } from '../components/common/Card';
+import { Flex, VStack } from '@chakra-ui/layout';
+import { useEffect } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { CardType } from '../components/common/Card';
+import { HandList } from '../components/prediction/HandList';
+import { Order } from '../components/prediction/Order';
+import { Player, playersState } from '../modules/state';
 
 const cards: CardType[] = [
   { cardId: 1, color: 'green', strength: 1 },
@@ -15,18 +20,45 @@ const cards: CardType[] = [
   { cardId: 11, color: 'treasure', strength: 0 },
 ];
 
+const players: Player[] = [
+  {
+    playerId: 1,
+    name: 'おほぉの人',
+    hand: [cards[0], cards[1], cards[2], cards[3], cards[4], cards[5]],
+    prediction: -1,
+    victory: 0,
+    scores: [],
+  },
+  {
+    playerId: 2,
+    name: 'たえこおばさん',
+    hand: [cards[4], cards[5], cards[6]],
+    prediction: -1,
+    victory: 0,
+    scores: [],
+  },
+  {
+    playerId: 3,
+    name: '凍ったたまごっち',
+    hand: [cards[8], cards[9], cards[10]],
+    prediction: -1,
+    victory: 0,
+    scores: [],
+  },
+];
+
 const Predict: React.FC = () => {
+  const setPlayers = useSetRecoilState(playersState);
+  useEffect(() => {
+    setPlayers(players);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
-    <Box
-      padding={8}
-      height="100vh"
-      display="flex"
-      justifyContent="space-between"
-    >
-      {cards.map((card) => (
-        <Card key={card.cardId} card={card} />
-      ))}
-    </Box>
+    <VStack height="100vh" justifyContent="center">
+      <Flex gridGap={8}>
+        <HandList />
+        <Order />
+      </Flex>
+    </VStack>
   );
 };
 
