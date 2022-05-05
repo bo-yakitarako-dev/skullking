@@ -6,10 +6,11 @@ import { Card } from '../common/Card';
 const HandList: React.FC = () => {
   const player = useRecoilValue(playerSelector);
   const hands = player?.hand ?? [];
+  const repeat = hands.length <= 5 ? hands.length : 5;
   return (
     <Grid
       position="relative"
-      templateColumns="repeat(5, 1fr)"
+      templateColumns={`repeat(${repeat}, 1fr)`}
       gap={4}
       border="1px solid white"
       padding="8"
