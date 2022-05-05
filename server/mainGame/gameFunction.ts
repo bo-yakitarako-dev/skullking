@@ -89,7 +89,7 @@ export const gameFunction = (io: SocketIO) => {
     io.emit('tableCards', [...tableCards.map((p) => p.convertJson())]);
   };
 
-  return { startGame, finishGame, predict, useCard };
+  return { sendInfo, startGame, finishGame, predict, useCard };
 };
 
 const startRound = () => {

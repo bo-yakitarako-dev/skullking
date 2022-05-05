@@ -1,9 +1,11 @@
 import { useCallback, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { playerSelector } from '../../../modules/state';
+import { post } from '../../../modules/http';
+import { playerIdState, playerSelector } from '../../../modules/state';
 
 export const usePredictForm = () => {
   const [count, setCount] = useState(0);
+  const playerId = useRecoilValue(playerIdState);
   const player = useRecoilValue(playerSelector);
   const prediction = player?.prediction ?? 0;
 
@@ -16,7 +18,8 @@ export const usePredictForm = () => {
   );
 
   const onSubmit = useCallback(() => {
-    console.log('count:', count);
+    const params = { playerId, prediction: count };
+    post('/api/predict', params);
   }, [count]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return { count, onChangeCount, onSubmit, prediction };

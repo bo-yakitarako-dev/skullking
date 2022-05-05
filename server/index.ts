@@ -48,7 +48,8 @@ app.prepare().then(() => {
 
   const io = new Server(httpServer);
   const { createPlayer, rename, sendStartPlayers } = createRegistryFunction(io);
-  const { startGame, finishGame, predict, useCard } = gameFunction(io);
+  const { sendInfo, startGame, finishGame, predict, useCard } =
+    gameFunction(io);
 
   server.post('/api/createPlayer', createPlayer);
   server.post('/api/renamePlayer', rename);
@@ -62,9 +63,9 @@ app.prepare().then(() => {
     if (dev) {
       console.log(`${infoHead} WebSocketサーバー接続!\x1b[0m`);
     }
-    if (state === 'ready') {
-      sendStartPlayers(socket);
-    } else {
+    sendStartPlayers(socket);
+    sendInfo();
+    if (state === 'playing') {
       socket.emit('nowPlaying');
     }
   });
