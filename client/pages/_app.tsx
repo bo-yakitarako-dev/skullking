@@ -12,11 +12,11 @@ export default function App({ Component, pageProps }: AppProps) {
       <ChakraProvider>
         <SocketProvider>
           <PlayerIdProvider>
-            <Box display={{ base: 'block', md: 'none' }}>
+            <Box display={{ base: 'block', lg: 'none' }}>
               <InvalidSP />
             </Box>
             <Box
-              display={{ base: 'none', md: 'block' }}
+              display={{ base: 'none', lg: 'block' }}
               backgroundColor="gray.900"
             >
               <Component {...pageProps} />
