@@ -20,7 +20,7 @@ export const usePredictForm = () => {
   const onSubmit = useCallback(() => {
     const params = { playerId, prediction: count };
     post('/api/predict', params);
-  }, [count]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [playerId, count]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return { count, onChangeCount, onSubmit, prediction };
 };
