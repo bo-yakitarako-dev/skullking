@@ -70,3 +70,8 @@ export const startSliderState = atom({
   key: 'startSliderState',
   default: false,
 });
+
+export const predictSliderState = atom({
+  key: 'predictSliderState',
+  default: false,
+});

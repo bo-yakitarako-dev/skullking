@@ -10,6 +10,7 @@ import {
   playersState,
   startSliderState,
 } from '../state';
+import { usePlayerUpdate } from './usePlayerUpdate';
 
 const socket = io();
 
@@ -21,10 +22,12 @@ export const useSocket = () => {
   const setPlayerId = useSetRecoilState(playerIdState);
 
   const router = useRouter();
+  const updateByPlayers = usePlayerUpdate();
 
   useEffect(() => {
     socket.on('playerInfo', (players: Player[]) => {
       setPlayers(players);
+      updateByPlayers(players);
     });
     socket.on('startRound', () => {
       setGameStatus('playing');
@@ -41,5 +44,5 @@ export const useSocket = () => {
       localStorage.removeItem('playerId');
       router.replace('/');
     });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [updateByPlayers]); // eslint-disable-line react-hooks/exhaustive-deps
 };
