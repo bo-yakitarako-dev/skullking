@@ -64,7 +64,7 @@ const Card: React.FC<Props> = ({ card, invalid = false, onClick }) => {
       alignItems="center"
       transitionDuration="0.2s"
       transitionProperty="transform"
-      onClick={invalid ? onClick : undefined}
+      onClick={!invalid ? onClick : undefined}
       _after={
         invalid
           ? {
