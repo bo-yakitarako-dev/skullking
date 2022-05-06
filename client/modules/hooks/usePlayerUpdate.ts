@@ -14,7 +14,7 @@ export const usePlayerUpdate = () => {
 
   const updateByPlayers = useCallback(
     (updatedPlayers: Player[]) => {
-      if (gameStatus === 'ready') {
+      if (gameStatus === 'ready' || currentPlayers.length === 0) {
         return;
       }
       const hasNoPrediction = currentPlayers.some((p) => p.prediction < 0);
