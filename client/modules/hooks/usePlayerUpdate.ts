@@ -1,20 +1,14 @@
 import { useCallback } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  gameStatusState,
-  Player,
-  playersState,
-  predictSliderState,
-} from '../state';
+import { Player, playersState, predictSliderState } from '../state';
 
 export const usePlayerUpdate = () => {
   const currentPlayers = useRecoilValue(playersState);
-  const gameStatus = useRecoilValue(gameStatusState);
   const setPredictionSlider = useSetRecoilState(predictSliderState);
 
   const updateByPlayers = useCallback(
     (updatedPlayers: Player[]) => {
-      if (gameStatus === 'ready' || currentPlayers.length === 0) {
+      if (currentPlayers.length === 0 || updatedPlayers.length === 0) {
         return;
       }
       const hasNoPrediction = currentPlayers.some((p) => p.prediction < 0);
@@ -23,7 +17,7 @@ export const usePlayerUpdate = () => {
         setPredictionSlider(true);
       }
     },
-    [currentPlayers, gameStatus], // eslint-disable-line react-hooks/exhaustive-deps
+    [currentPlayers], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return updateByPlayers;

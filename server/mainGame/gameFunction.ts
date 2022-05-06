@@ -37,6 +37,7 @@ export const gameFunction = (io: SocketIO) => {
     resetRegistry();
     addAndShuffle();
     io.emit('finishGame');
+    sendInfo();
     res.json({ ok: true });
   };
 

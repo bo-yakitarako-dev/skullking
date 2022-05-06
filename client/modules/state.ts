@@ -1,9 +1,7 @@
 import { atom, selector } from 'recoil';
 import { CardType } from '../components/common/Card';
-import { testCards } from '../debug/cards';
-import { testPlayers } from '../debug/players';
 
-let defaultPlayerId = 2;
+let defaultPlayerId = 0;
 
 if (typeof window !== 'undefined' && localStorage.playerId) {
   defaultPlayerId = Number(localStorage.playerId);
@@ -38,7 +36,7 @@ export type Player = {
 
 export const playersState = atom({
   key: 'playersState',
-  default: [...testPlayers],
+  default: [] as Player[],
 });
 
 export const playerSelector = selector({
@@ -68,7 +66,7 @@ export const predictSliderState = atom({
 
 export const tableCardsState = atom({
   key: 'tableCardsState',
-  default: [testCards[6]] as CardType[],
+  default: [] as CardType[],
 });
 
 export const turnPlayerSelector = selector({
