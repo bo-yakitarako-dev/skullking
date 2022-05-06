@@ -8,6 +8,7 @@ const StartSlider: React.FC = () => {
       state={startSliderState}
       redirectPath="/predict"
       displayTime={2000}
+      push
     >
       <Text color="white" fontSize="4xl">
         はじまるよ！
