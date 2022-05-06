@@ -6,7 +6,7 @@ import { keyframes } from '@chakra-ui/system';
 import { useBreakpointValue } from '@chakra-ui/media-query';
 import { NameBox } from './NameBox';
 import { useRecoilValue } from 'recoil';
-import { playerCountSelector } from '../../modules/state';
+import { firstPlayerSelector, playerCountSelector } from '../../modules/state';
 import { useCallback } from 'react';
 import { post } from '../../modules/http';
 
@@ -22,7 +22,13 @@ const setCrowdyKeyframe = (rotate: number) => `
 const Start: React.FC = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const playerCount = useRecoilValue(playerCountSelector);
-  const canStart = playerCount >= 2 && playerCount <= 6;
+  const isFirst = useRecoilValue(firstPlayerSelector);
+  const joined = playerCount >= 2 && playerCount <= 6;
+  const canStart = isFirst && joined;
+  const label =
+    isFirst || !joined
+      ? '2人以上いないと始められないよ><'
+      : '最初の人しか始められないよ><';
 
   const startGame = useCallback(() => {
     post('/api/startGame');
@@ -75,7 +81,7 @@ const Start: React.FC = () => {
           )}
         </Text>
         <Tooltip
-          label="2人以上いないと始められないよ><"
+          label={label}
           hasArrow
           bg="red.600"
           isDisabled={canStart}
