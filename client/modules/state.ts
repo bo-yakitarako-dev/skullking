@@ -48,18 +48,6 @@ export const playerSelector = selector({
   },
 });
 
-export const firstPlayerSelector = selector({
-  key: 'firstPlayerSelector',
-  get: ({ get }) => {
-    const players = get(playersState);
-    if (players.length === 0) {
-      return false;
-    }
-    const ownId = get(playerIdState);
-    return players[0].playerId === ownId;
-  },
-});
-
 type GameStatus = 'ready' | 'playing';
 export const gameStatusState = atom({
   key: 'gameStatusState',
