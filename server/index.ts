@@ -2,7 +2,7 @@ import express, { Request } from 'express';
 import next from 'next';
 import { Server, Socket as _Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { createRegistryFunction } from './userRegistry/registry';
+import { createRegistryFunction, players } from './userRegistry/registry';
 import { gameFunction, state } from './mainGame/gameFunction';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,8 +48,7 @@ app.prepare().then(() => {
 
   const io = new Server(httpServer);
   const { createPlayer, rename } = createRegistryFunction(io);
-  const { sendInfo, startGame, finishGame, predict, useCard } =
-    gameFunction(io);
+  const { startGame, finishGame, predict, useCard } = gameFunction(io);
 
   server.post('/api/createPlayer', createPlayer);
   server.post('/api/renamePlayer', rename);
@@ -63,7 +62,7 @@ app.prepare().then(() => {
     if (dev) {
       console.log(`${infoHead} WebSocketサーバー接続!\x1b[0m`);
     }
-    sendInfo();
+    socket.emit('playerInfo', [...players.map((p) => p.infoJson())]);
     if (state === 'playing') {
       socket.emit('nowPlaying');
     }
