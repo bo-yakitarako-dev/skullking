@@ -19,7 +19,7 @@ type State =
   | 'playing'
   | 'finish';
 export let state: State = 'ready';
-let round = 0;
+export let round = 0;
 
 export const gameFunction = (io: SocketIO) => {
   const sendInfo = () => {
@@ -88,7 +88,7 @@ export const gameFunction = (io: SocketIO) => {
 
     if (tableCards.length === players.length) {
       const winnerIndex = battle();
-      io.emit('winnerIndex', winnerIndex);
+      io.emit('winner', players[winnerIndex].infoJson());
       players[winnerIndex].win();
       sort(winnerIndex);
       discardTheCards();

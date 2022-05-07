@@ -1,3 +1,4 @@
+import { useToast } from '@chakra-ui/toast';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
@@ -25,6 +26,7 @@ export const useSocket = () => {
   const setRound = useSetRecoilState(roundState);
   const setTableCards = useSetRecoilState(tableCardsState);
 
+  const toast = useToast();
   const router = useRouter();
   const updateByStatus = useStatusUpdate();
 
@@ -41,6 +43,16 @@ export const useSocket = () => {
     });
     socket.on('tableCards', (cards: CardType[]) => {
       setTableCards(cards);
+    });
+    socket.on('winner', (winner: Player) => {
+      toast({
+        title: `${winner.name} の勝ち！`,
+        description: '次はおめぇからじゃい！',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+        position: 'top',
+      });
     });
     socket.on('finishGame', () => {
       setName('');

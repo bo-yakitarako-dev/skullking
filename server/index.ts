@@ -3,7 +3,7 @@ import next from 'next';
 import { Server, Socket as _Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { createRegistryFunction, players } from './userRegistry/registry';
-import { gameFunction, state } from './mainGame/gameFunction';
+import { gameFunction, round, state } from './mainGame/gameFunction';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PostReq<Body> = Request<any, any, Body>;
@@ -63,6 +63,7 @@ app.prepare().then(() => {
       console.log(`${infoHead} WebSocketサーバー接続!\x1b[0m`);
     }
     socket.emit('playerInfo', [...players.map((p) => p.infoJson())]);
+    socket.emit('startRound', round);
     if (state === 'playing') {
       socket.emit('nowPlaying');
     }
