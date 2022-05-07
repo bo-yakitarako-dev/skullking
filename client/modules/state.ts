@@ -1,5 +1,6 @@
 import { atom, selector } from 'recoil';
 import { CardType } from '../components/common/Card';
+import { getCurrentColor } from '../components/playing/hooks/useHand';
 
 let defaultPlayerId = 0;
 
@@ -48,7 +49,7 @@ export const playerSelector = selector({
   },
 });
 
-type GameStatus = 'ready' | 'playing';
+export type GameStatus = 'ready' | 'predicting' | 'playing';
 export const gameStatusState = atom({
   key: 'gameStatusState',
   default: 'ready' as GameStatus,
@@ -67,6 +68,19 @@ export const predictSliderState = atom({
 export const tableCardsState = atom({
   key: 'tableCardsState',
   default: [] as CardType[],
+});
+
+export const includeColorInHandSelector = selector({
+  key: 'includeColorInHandSelector',
+  get: ({ get }) => {
+    const player = get(playerSelector);
+    if (player === null) {
+      return false;
+    }
+    const tableCards = get(tableCardsState);
+    const currentColor = getCurrentColor(tableCards);
+    return player.hand.some(({ color }) => color === currentColor);
+  },
 });
 
 export const turnPlayerSelector = selector({

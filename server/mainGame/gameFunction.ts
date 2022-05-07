@@ -11,7 +11,7 @@ import {
 
 //type MustColor = 'undefined' | 'black' | 'green' | 'yellow' | 'purple';
 
-type State = 'ready' | 'playing';
+type State = 'ready' | 'predicting' | 'playing';
 export let state: State = 'ready';
 let round = 0;
 
@@ -22,11 +22,12 @@ export const gameFunction = (io: SocketIO) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const startGame = (req: any, res: Response) => {
-    state = 'playing';
+    state = 'predicting';
     shuffle(deck);
     startRound();
     sendInfo();
     io.emit('startRound', round);
+    io.emit('gameStatus', state);
     res.json({ ok: true });
   };
 
@@ -80,18 +81,21 @@ export const gameFunction = (io: SocketIO) => {
       players[winnerIndex].win();
       sort(winnerIndex);
       discardTheCards();
-      if (players[players.length].getHand().length === 0) {
+      if (players[players.length - 1].getHand().length === 0) {
         calcScore();
         if (round === 10) {
           finishGame(req, res);
         } else {
           startRound();
+          state = 'predicting';
           io.emit('startRound', round);
+          io.emit('gameStatus', state);
         }
       }
     }
     sendInfo();
     io.emit('tableCards', [...tableCards.map((p) => p.convertJson())]);
+    res.json({ ok: true });
   };
 
   return { sendInfo, startGame, finishGame, predict, useCard };

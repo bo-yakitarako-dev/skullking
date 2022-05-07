@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 import { useRecoilValue } from 'recoil';
+import { post } from '../../../modules/http';
 import {
+  includeColorInHandSelector,
   playerIdState,
   tableCardsState,
   turnPlayerSelector,
@@ -10,13 +12,14 @@ import { CardType } from '../../common/Card';
 export const useHand = () => {
   const playerId = useRecoilValue(playerIdState);
   const tableCards = useRecoilValue(tableCardsState);
+  const includeColor = useRecoilValue(includeColorInHandSelector);
   const turnPlayer = useRecoilValue(turnPlayerSelector);
 
   const onClickCard = useCallback(
     ({ cardId }: CardType) =>
       () => {
         const params = { playerId, cardId };
-        console.log(params);
+        post('/api/useCard', params);
       },
     [playerId],
   );
@@ -26,9 +29,9 @@ export const useHand = () => {
       if (turnPlayer?.playerId !== playerId) {
         return false;
       }
-      return isValidColor(card, tableCards);
+      return !includeColor || isValidColor(card, tableCards);
     },
-    [playerId, tableCards, turnPlayer],
+    [playerId, includeColor, tableCards, turnPlayer],
   );
 
   return { onClickCard, isValid };
@@ -47,7 +50,7 @@ const isValidColor = (card: CardType, tableCards: CardType[]) => {
   return card.color === currentColor;
 };
 
-const getCurrentColor = (tableCards: CardType[]) => {
+export const getCurrentColor = (tableCards: CardType[]) => {
   for (const { color } of tableCards) {
     if (colors.includes(color)) {
       return color;

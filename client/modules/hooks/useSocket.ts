@@ -4,6 +4,7 @@ import { useSetRecoilState } from 'recoil';
 import { io } from 'socket.io-client';
 import { CardType } from '../../components/common/Card';
 import {
+  GameStatus,
   gameStatusState,
   nameState,
   Player,
@@ -28,16 +29,15 @@ export const useSocket = () => {
   const updateByPlayers = usePlayerUpdate();
 
   useEffect(() => {
+    socket.on('gameStatus', (gameStatus: GameStatus) => {
+      setGameStatus(gameStatus);
+    });
     socket.on('playerInfo', (players: Player[]) => {
-      setPlayers(players);
       updateByPlayers(players);
+      setPlayers(players);
     });
     socket.on('startRound', () => {
-      setGameStatus('playing');
       setStartSlider(true);
-    });
-    socket.on('nowPlaying', () => {
-      setGameStatus('playing');
     });
     socket.on('tableCards', (cards: CardType[]) => {
       setTableCards(cards);
@@ -45,7 +45,6 @@ export const useSocket = () => {
     socket.on('finishGame', () => {
       setName('');
       setPlayerId(0);
-      setGameStatus('ready');
       localStorage.removeItem('playerId');
       router.replace('/');
     });
