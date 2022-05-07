@@ -36,6 +36,10 @@ export class Player {
     this.prediction = prediction;
   }
 
+  public isPredicted() {
+    return this.prediction >= 0;
+  }
+
   public reset() {
     this.prediction = -1;
     this.victory = 0;

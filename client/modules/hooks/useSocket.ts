@@ -10,10 +10,9 @@ import {
   Player,
   playerIdState,
   playersState,
-  startSliderState,
   tableCardsState,
 } from '../state';
-import { usePlayerUpdate } from './usePlayerUpdate';
+import { useStatusUpdate } from './useStatusUpdate';
 
 const socket = io();
 
@@ -21,23 +20,19 @@ export const useSocket = () => {
   const setPlayers = useSetRecoilState(playersState);
   const setGameStatus = useSetRecoilState(gameStatusState);
   const setName = useSetRecoilState(nameState);
-  const setStartSlider = useSetRecoilState(startSliderState);
   const setPlayerId = useSetRecoilState(playerIdState);
   const setTableCards = useSetRecoilState(tableCardsState);
 
   const router = useRouter();
-  const updateByPlayers = usePlayerUpdate();
+  const updateByStatus = useStatusUpdate();
 
   useEffect(() => {
     socket.on('gameStatus', (gameStatus: GameStatus) => {
       setGameStatus(gameStatus);
+      updateByStatus(gameStatus);
     });
     socket.on('playerInfo', (players: Player[]) => {
-      updateByPlayers(players);
       setPlayers(players);
-    });
-    socket.on('startRound', () => {
-      setStartSlider(true);
     });
     socket.on('tableCards', (cards: CardType[]) => {
       setTableCards(cards);
@@ -48,5 +43,5 @@ export const useSocket = () => {
       localStorage.removeItem('playerId');
       router.replace('/');
     });
-  }, [updateByPlayers]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [updateByStatus]); // eslint-disable-line react-hooks/exhaustive-deps
 };

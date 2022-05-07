@@ -11,7 +11,13 @@ import {
 
 //type MustColor = 'undefined' | 'black' | 'green' | 'yellow' | 'purple';
 
-type State = 'ready' | 'predicting' | 'playing';
+type State =
+  | 'ready'
+  | 'start'
+  | 'predicting'
+  | 'predicted'
+  | 'playing'
+  | 'finish';
 export let state: State = 'ready';
 let round = 0;
 
@@ -22,7 +28,7 @@ export const gameFunction = (io: SocketIO) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const startGame = (req: any, res: Response) => {
-    state = 'predicting';
+    state = 'start';
     shuffle(deck);
     startRound();
     sendInfo();
@@ -57,6 +63,10 @@ export const gameFunction = (io: SocketIO) => {
     }
     player.predict(req.body.prediction);
     sendInfo();
+    if (players.every((p) => p.isPredicted())) {
+      state = 'predicted';
+      io.emit('gameStatus', state);
+    }
     res.json({ ok: true });
   };
 
@@ -64,6 +74,7 @@ export const gameFunction = (io: SocketIO) => {
     req: PostReq<{ playerId: number; cardId: number }>,
     res: Response,
   ) => {
+    state = 'playing';
     const player = players.find((player) =>
       player.isPlayerId(req.body.playerId),
     );
@@ -85,13 +96,14 @@ export const gameFunction = (io: SocketIO) => {
         calcScore();
         if (round === 10) {
           finishGame(req, res);
+          state = 'finish';
         } else {
           startRound();
           state = 'predicting';
           io.emit('startRound', round);
-          io.emit('gameStatus', state);
         }
       }
+      io.emit('gameStatus', state);
     }
     sendInfo();
     io.emit('tableCards', [...tableCards.map((p) => p.convertJson())]);

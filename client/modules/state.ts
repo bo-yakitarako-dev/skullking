@@ -49,7 +49,12 @@ export const playerSelector = selector({
   },
 });
 
-export type GameStatus = 'ready' | 'predicting' | 'playing';
+export type GameStatus =
+  | 'ready'
+  | 'start'
+  | 'predicting'
+  | 'predicted'
+  | 'playing';
 export const gameStatusState = atom({
   key: 'gameStatusState',
   default: 'ready' as GameStatus,
