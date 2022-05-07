@@ -4,14 +4,14 @@ export let deck: Card[] = [];
 export let discard: Card[] = [];
 export let tableCards: Card[] = [];
 
-deck.push(new Card('skullking', 15));
+deck.push(new Card('skullking', 30));
 for (let i = 0; i < 5; i++) {
-  deck.push(new Card('pirates', 15));
+  deck.push(new Card('pirates', 29));
 }
 for (let i = 0; i < 2; i++) {
-  deck.push(new Card('mermaid', 15));
+  deck.push(new Card('mermaid', 31));
 }
-deck.push(new Card('tigres', 15));
+deck.push(new Card('tigres', 0));
 deck.push(new Card('kraken', 0));
 for (let i = 0; i < 5; i++) {
   deck.push(new Card('escape', 0));

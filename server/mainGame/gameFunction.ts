@@ -8,8 +8,8 @@ import {
   shuffle,
   tableCards,
 } from '../cardDealing/deck';
-
-//type MustColor = 'undefined' | 'black' | 'green' | 'yellow' | 'purple';
+import { Card } from '../cardDealing/card';
+let mustColor = 'undefined';
 
 type State = 'ready' | 'playing';
 export let state: State = 'ready';
@@ -67,14 +67,26 @@ export const gameFunction = (io: SocketIO) => {
         .json({ ok: false, message: 'そのIDのプレイヤーはおらんのじゃ' });
       return;
     }
-    tableCards.push(player.useCard(req.body.cardId));
+    const card: Card = player.useCard(req.body.cardId);
+    tableCards.push(card);
+    if (
+      mustColor === 'undefined' &&
+      card.getColor() === ('black' || 'green' || 'yellow' || 'purple')
+    ) {
+      mustColor = card.getColor();
+    }
 
     if (tableCards.length === players.length) {
       const winnerIndex = battle();
       io.emit('winnerIndex', winnerIndex);
-      players[winnerIndex].win();
-      sort(winnerIndex);
+      if (winnerIndex < 0) {
+        sort(winnerIndex + players.length);
+      } else {
+        players[winnerIndex].win();
+        sort(winnerIndex);
+      }
       discardTheCards();
+      mustColor = 'undefined';
       if (players[players.length].getHand().length === 0) {
         calcScore();
         if (round === 10) {
@@ -87,6 +99,7 @@ export const gameFunction = (io: SocketIO) => {
     }
     sendInfo();
     io.emit('tableCards', [...tableCards.map((p) => p.convertJson())]);
+    io.emit('mustColor', mustColor);
   };
 
   return { startGame, finishGame, predict, useCard };
@@ -105,8 +118,29 @@ const startRound = () => {
 };
 
 const battle = () => {
-  //const mustColor: MustColor = 'undefined';
-  return 1;
+  //green,purple,yellowはMCでなければ0
+  //blackは+14
+  let winnerIndex = 0;
+  if (
+    tableCards.some((card) => card.getColor() === 'pirates') &&
+    tableCards.some((card) => card.getColor() === 'mermaid') &&
+    !tableCards.some((card) => card.getColor() === 'skullking')
+  ) {
+    winnerIndex = tableCards.findIndex(
+      (card) => card.getColor() === 'skullking',
+    );
+  } else {
+    for (let i = 1; i < players.length; i++) {
+      const a = tableCards[winnerIndex].getStrength();
+      const b = tableCards[i].getStrength();
+    }
+  }
+
+  if (tableCards.some((card) => card.getColor() === 'kraken')) {
+    return winnerIndex - players.length;
+  } else {
+    return winnerIndex;
+  }
 };
 
 const calcScore = () => {
