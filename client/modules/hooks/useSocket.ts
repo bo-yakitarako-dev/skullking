@@ -10,6 +10,7 @@ import {
   Player,
   playerIdState,
   playersState,
+  roundState,
   tableCardsState,
 } from '../state';
 import { useStatusUpdate } from './useStatusUpdate';
@@ -21,6 +22,7 @@ export const useSocket = () => {
   const setGameStatus = useSetRecoilState(gameStatusState);
   const setName = useSetRecoilState(nameState);
   const setPlayerId = useSetRecoilState(playerIdState);
+  const setRound = useSetRecoilState(roundState);
   const setTableCards = useSetRecoilState(tableCardsState);
 
   const router = useRouter();
@@ -33,6 +35,9 @@ export const useSocket = () => {
     });
     socket.on('playerInfo', (players: Player[]) => {
       setPlayers(players);
+    });
+    socket.on('startRound', (round: number) => {
+      setRound(round);
     });
     socket.on('tableCards', (cards: CardType[]) => {
       setTableCards(cards);

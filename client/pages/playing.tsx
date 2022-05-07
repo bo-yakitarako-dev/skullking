@@ -1,13 +1,28 @@
-import { Flex } from '@chakra-ui/layout';
+import { Flex, Text, VStack } from '@chakra-ui/layout';
 import { Hand } from '../components/playing/Hand';
 import { GameTable } from '../components/playing/GameTable';
+import { useRecoilValue } from 'recoil';
+import { roundState } from '../modules/state';
 
 const Playing: React.FC = () => {
+  const round = useRecoilValue(roundState);
   return (
-    <Flex minHeight="100vh" justifyContent="center" alignItems="center">
-      <GameTable />
+    <VStack minHeight="100vh" justifyContent="center">
+      <Text
+        position="absolute"
+        color="white"
+        fontWeight="bold"
+        fontSize="4xl"
+        marginBottom="4"
+        top="32px"
+      >
+        第{round}らうんど！勝負だ！
+      </Text>
+      <Flex>
+        <GameTable />
+      </Flex>
       <Hand />
-    </Flex>
+    </VStack>
   );
 };
 

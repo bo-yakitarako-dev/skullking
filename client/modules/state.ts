@@ -70,6 +70,11 @@ export const predictSliderState = atom({
   default: false,
 });
 
+export const roundState = atom({
+  key: 'roundState',
+  default: 1,
+});
+
 export const tableCardsState = atom({
   key: 'tableCardsState',
   default: [] as CardType[],
