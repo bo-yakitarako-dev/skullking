@@ -40,7 +40,13 @@ export class Player {
     return this.prediction >= 0;
   }
 
-  public reset() {
+  public resetAll() {
+    this.resetPlaying();
+    this.hand = [];
+    this.scores = [];
+  }
+
+  public resetPlaying() {
     this.prediction = -1;
     this.victory = 0;
   }

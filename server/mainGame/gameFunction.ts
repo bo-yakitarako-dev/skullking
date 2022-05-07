@@ -18,7 +18,7 @@ type State =
   | 'predicting'
   | 'predicted'
   | 'playing'
-  | 'finish';
+  | 'result';
 export let state: State = 'ready';
 export let round = 0;
 
@@ -29,7 +29,9 @@ export const gameFunction = (io: SocketIO) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const startGame = (req: any, res: Response) => {
+    round = 0;
     state = 'start';
+    players.forEach((p) => p.resetAll());
     shuffle(deck);
     startRound();
     sendInfo();
@@ -96,9 +98,8 @@ export const gameFunction = (io: SocketIO) => {
       discardTheCards();
       if (players[players.length - 1].getHand().length === 0) {
         const roundOverPlayers = calcScore();
-        if (round === 10) {
-          finishGame(req, res);
-          state = 'finish';
+        if (round === 2) {
+          state = 'result';
         } else {
           sendedPlayers = true;
           state = 'predicting';
@@ -158,7 +159,7 @@ const calcScore = () => {
       }
     }
     resultPlayers.push(players[i].clone());
-    players[i].reset();
+    players[i].resetPlaying();
   }
   return resultPlayers.map((p) => p.infoJson());
 };

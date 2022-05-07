@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
+import { post } from '../../../modules/http';
 
 export const useActions = () => {
   const router = useRouter();
@@ -8,5 +9,9 @@ export const useActions = () => {
     router.replace('/');
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { goToTitle };
+  const restart = useCallback(() => {
+    post('/api/startGame');
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return { goToTitle, restart };
 };

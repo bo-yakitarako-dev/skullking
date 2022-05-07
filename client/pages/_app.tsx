@@ -8,6 +8,7 @@ import { PlayerIdProvider } from '../components/PlayerIdProvider';
 import { StartSlider } from '../components/slider/StartSlider';
 import { PredictionSlider } from '../components/slider/PredictionSlider';
 import { RoundOverSlider } from '../components/slider/RoundOverSlider';
+import { ResultSlider } from '../components/slider/ResultSlider';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -27,6 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <StartSlider />
             <PredictionSlider />
             <RoundOverSlider />
+            <ResultSlider />
           </PlayerIdProvider>
         </SocketProvider>
       </ChakraProvider>

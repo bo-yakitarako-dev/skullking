@@ -54,7 +54,8 @@ export type GameStatus =
   | 'start'
   | 'predicting'
   | 'predicted'
-  | 'playing';
+  | 'playing'
+  | 'result';
 export const gameStatusState = atom({
   key: 'gameStatusState',
   default: 'ready' as GameStatus,
@@ -72,6 +73,11 @@ export const predictSliderState = atom({
 
 export const roundOverSliderState = atom({
   key: 'roundOverSliderState',
+  default: false,
+});
+
+export const resultSliderState = atom({
+  key: 'resultSliderState',
   default: false,
 });
 

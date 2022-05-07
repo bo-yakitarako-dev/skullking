@@ -3,6 +3,7 @@ import { useSetRecoilState } from 'recoil';
 import {
   GameStatus,
   predictSliderState,
+  resultSliderState,
   roundOverSliderState,
   startSliderState,
 } from '../state';
@@ -11,6 +12,7 @@ export const useStatusUpdate = () => {
   const setStartSlider = useSetRecoilState(startSliderState);
   const setPredictionSlider = useSetRecoilState(predictSliderState);
   const setRoundOverSlider = useSetRecoilState(roundOverSliderState);
+  const setResultSlider = useSetRecoilState(resultSliderState);
 
   const updateByStatus = useCallback(
     (gameStatus: GameStatus) => {
@@ -23,6 +25,9 @@ export const useStatusUpdate = () => {
           break;
         case 'predicting':
           setRoundOverSlider(true);
+          break;
+        case 'result':
+          setResultSlider(true);
           break;
       }
     },
