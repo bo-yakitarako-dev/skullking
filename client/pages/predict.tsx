@@ -10,7 +10,7 @@ const Predict: React.FC = () => {
       <Head>
         <title>勝利数を予想しようね</title>
       </Head>
-      <VStack height="100vh" justifyContent="center">
+      <VStack minHeight="100vh" justifyContent="center">
         <Heading
           fontFamily="'Hachi Maru Pop', cursive"
           marginBottom={12}

@@ -36,7 +36,7 @@ const SocketSample: React.FC = () => {
       justifyContent="center"
       alignItems="center"
       width="100%"
-      height="100vh"
+      minHeight="100vh"
     >
       <Text fontSize="2xl" fontWeight="bold">
         {message}

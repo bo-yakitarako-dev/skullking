@@ -5,7 +5,7 @@ const InvalidSP: React.FC = () => {
     <Box
       backgroundColor="gray.900"
       width="100%"
-      height="100vh"
+      minHeight="100vh"
       display="flex"
       flexDirection="column"
       justifyContent="center"

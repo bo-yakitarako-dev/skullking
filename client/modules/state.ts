@@ -77,7 +77,7 @@ export const roundOverSliderState = atom({
 
 export const roundState = atom({
   key: 'roundState',
-  default: 1,
+  default: 0,
 });
 
 export const tableCardsState = atom({

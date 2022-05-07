@@ -13,11 +13,11 @@ const RoundOverSlider: React.FC = () => {
       displayTime={6000}
     >
       <Text fontSize="2xl" fontWeight="bold" color="white" marginBottom="4">
-        第{round}らうんどの結果！
+        第{round - 1}らうんどの結果！
       </Text>
       <Information />
       <Text fontSize="xl" color="white" marginTop="4">
-        第{round + 1}らうんどの予想していこうね
+        第{round}らうんどの予想していこうね
       </Text>
     </InformationSlider>
   );

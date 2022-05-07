@@ -102,10 +102,10 @@ export const gameFunction = (io: SocketIO) => {
         } else {
           sendedPlayers = true;
           state = 'predicting';
+          startRound();
           io.emit('startRound', round);
           io.emit('roundOverPlayers', roundOverPlayers);
           setTimeout(() => {
-            startRound();
             sendInfo();
           }, 3000);
         }
