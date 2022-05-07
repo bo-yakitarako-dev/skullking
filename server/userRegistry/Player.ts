@@ -89,4 +89,13 @@ export class Player {
   public getScore() {
     return this.scores;
   }
+
+  public clone() {
+    const player = new Player(this.playerId, this.name);
+    player.prediction = this.prediction;
+    player.victory = this.victory;
+    player.hand = [...this.hand];
+    player.scores = [...this.scores];
+    return player;
+  }
 }

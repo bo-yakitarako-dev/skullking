@@ -11,6 +11,7 @@ import {
   Player,
   playerIdState,
   playersState,
+  roundOverPlayersState,
   roundState,
   tableCardsState,
 } from '../state';
@@ -24,6 +25,7 @@ export const useSocket = () => {
   const setName = useSetRecoilState(nameState);
   const setPlayerId = useSetRecoilState(playerIdState);
   const setRound = useSetRecoilState(roundState);
+  const setRoundOverPlayers = useSetRecoilState(roundOverPlayersState);
   const setTableCards = useSetRecoilState(tableCardsState);
 
   const toast = useToast();
@@ -53,6 +55,9 @@ export const useSocket = () => {
         isClosable: true,
         position: 'top',
       });
+    });
+    socket.on('roundOverPlayers', (players: Player[]) => {
+      setRoundOverPlayers(players);
     });
     socket.on('finishGame', () => {
       setName('');

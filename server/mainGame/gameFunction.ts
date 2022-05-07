@@ -8,6 +8,7 @@ import {
   shuffle,
   tableCards,
 } from '../cardDealing/deck';
+import { Player } from '../userRegistry/Player';
 
 //type MustColor = 'undefined' | 'black' | 'green' | 'yellow' | 'purple';
 
@@ -93,19 +94,23 @@ export const gameFunction = (io: SocketIO) => {
       sort(winnerIndex);
       discardTheCards();
       if (players[players.length - 1].getHand().length === 0) {
-        calcScore();
+        const roundOverPlayers = calcScore();
         if (round === 10) {
           finishGame(req, res);
           state = 'finish';
         } else {
-          startRound();
           state = 'predicting';
           io.emit('startRound', round);
+          io.emit('roundOverPlayers', roundOverPlayers);
+          setTimeout(() => {
+            startRound();
+            sendInfo();
+          }, 3000);
         }
       }
-      io.emit('gameStatus', state);
     }
     sendInfo();
+    io.emit('gameStatus', state);
     io.emit('tableCards', [...tableCards.map((p) => p.convertJson())]);
     res.json({ ok: true });
   };
@@ -131,6 +136,7 @@ const battle = () => {
 };
 
 const calcScore = () => {
+  const resultPlayers: Player[] = [];
   for (let i = 0; i < players.length; i++) {
     if (players[i].getPrediction() === 0) {
       if (players[i].getPrediction() !== players[i].getVictory()) {
@@ -147,6 +153,8 @@ const calcScore = () => {
         players[i].writeScore(20 * players[i].getPrediction());
       }
     }
+    resultPlayers.push(players[i].clone());
     players[i].reset();
   }
+  return resultPlayers.map((p) => p.infoJson());
 };

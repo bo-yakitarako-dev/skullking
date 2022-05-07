@@ -8,13 +8,27 @@ import {
   Tr,
 } from '@chakra-ui/table';
 import { useRecoilValue } from 'recoil';
-import { playersState } from '../../modules/state';
+import {
+  playerIdState,
+  playersState,
+  roundOverPlayersState,
+  turnPlayerSelector,
+} from '../../modules/state';
 
-const Information: React.FC = () => {
-  const players = useRecoilValue(playersState);
+type Props = {
+  sum?: boolean;
+};
+
+const Information: React.FC<Props> = ({ sum = false }) => {
+  const ownId = useRecoilValue(playerIdState);
+  const currentPlayers = useRecoilValue(playersState);
+  const roundOverPlayers = useRecoilValue(roundOverPlayersState);
+  const turnPlayer = useRecoilValue(turnPlayerSelector);
+
+  const players = sum ? currentPlayers : roundOverPlayers;
   return (
     <TableContainer border="1px solid white" borderRadius="16px" padding={4}>
-      <Table variant="simple" size="sm">
+      <Table variant="simple" size={sum ? 'sm' : 'md'}>
         <Thead>
           <Tr color="white">
             <Th></Th>
@@ -25,26 +39,33 @@ const Information: React.FC = () => {
               勝利数
             </Th>
             <Th color="white" fontFamily="'Hachi Maru Pop', cursive">
-              得点
+              {sum ? '総' : ''}得点
             </Th>
           </Tr>
         </Thead>
         <Tbody>
           {players.map(({ playerId, name, prediction, victory, scores }) => {
-            const score = scores.reduce((acc, curr) => acc + curr, 0);
+            const score = sum
+              ? scores.reduce((acc, curr) => acc + curr, 0)
+              : scores[scores.length - 1] ?? 0;
             const sign = score > 0 ? '+' : '';
+            const playerColor = playerId === ownId ? 'green.300' : 'white';
+            const color =
+              playerId === turnPlayer?.playerId && sum
+                ? 'red.300'
+                : playerColor;
             return (
               <Tr key={playerId}>
-                <Td color="white" fontFamily="'Hachi Maru Pop', cursive">
+                <Td color={color} fontFamily="'Hachi Maru Pop', cursive">
                   {name}
                 </Td>
-                <Td color="white" fontFamily="'Hachi Maru Pop', cursive">
+                <Td color={playerColor} fontFamily="'Hachi Maru Pop', cursive">
                   {prediction}
                 </Td>
-                <Td color="white" fontFamily="'Hachi Maru Pop', cursive">
+                <Td color={playerColor} fontFamily="'Hachi Maru Pop', cursive">
                   {victory}
                 </Td>
-                <Td color="white" fontFamily="'Hachi Maru Pop', cursive">
+                <Td color={playerColor} fontFamily="'Hachi Maru Pop', cursive">
                   {sign}
                   {score}
                 </Td>

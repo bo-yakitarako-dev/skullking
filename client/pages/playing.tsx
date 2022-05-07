@@ -21,7 +21,7 @@ const Playing: React.FC = () => {
       </Text>
       <Flex gridGap="4" alignItems="flex-start">
         <GameTable />
-        <Information />
+        <Information sum />
       </Flex>
       <Hand />
     </VStack>

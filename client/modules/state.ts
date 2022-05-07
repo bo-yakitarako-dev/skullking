@@ -70,6 +70,11 @@ export const predictSliderState = atom({
   default: false,
 });
 
+export const roundOverSliderState = atom({
+  key: 'roundOverSliderState',
+  default: false,
+});
+
 export const roundState = atom({
   key: 'roundState',
   default: 1,
@@ -103,4 +108,9 @@ export const turnPlayerSelector = selector({
     }
     return players[cardCount];
   },
+});
+
+export const roundOverPlayersState = atom({
+  key: 'roundOverPlayersState',
+  default: [] as Player[],
 });
