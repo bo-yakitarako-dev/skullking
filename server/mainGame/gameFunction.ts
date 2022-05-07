@@ -87,6 +87,7 @@ export const gameFunction = (io: SocketIO) => {
     }
     tableCards.push(player.useCard(req.body.cardId));
 
+    let sendedPlayers = false;
     if (tableCards.length === players.length) {
       const winnerIndex = battle();
       io.emit('winner', players[winnerIndex].infoJson());
@@ -99,6 +100,7 @@ export const gameFunction = (io: SocketIO) => {
           finishGame(req, res);
           state = 'finish';
         } else {
+          sendedPlayers = true;
           state = 'predicting';
           io.emit('startRound', round);
           io.emit('roundOverPlayers', roundOverPlayers);
@@ -109,7 +111,9 @@ export const gameFunction = (io: SocketIO) => {
         }
       }
     }
-    sendInfo();
+    if (!sendedPlayers) {
+      sendInfo();
+    }
     io.emit('gameStatus', state);
     io.emit('tableCards', [...tableCards.map((p) => p.convertJson())]);
     res.json({ ok: true });
