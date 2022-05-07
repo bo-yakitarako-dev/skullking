@@ -98,7 +98,7 @@ export const gameFunction = (io: SocketIO) => {
       discardTheCards();
       if (players[players.length - 1].getHand().length === 0) {
         const roundOverPlayers = calcScore();
-        if (round === 2) {
+        if (round === 10) {
           state = 'result';
         } else {
           sendedPlayers = true;
