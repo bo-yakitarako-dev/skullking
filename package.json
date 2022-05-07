@@ -7,7 +7,7 @@
     "web": "docker exec -it node bash",
     "docker-stop": "cd docker; docker-compose down",
     "dev": "bash ./dev.sh",
-    "client-build": "next build ./client",
+    "client-build": "rm -rf ./client/.next; next build ./client",
     "server-build": "esbuild server/index.ts --bundle --platform=node --external:next --minify --outfile=dist/bundle.js",
     "build": "yarn server-build; yarn client-build",
     "start": "NODE_ENV=production node ./dist/bundle.js",
