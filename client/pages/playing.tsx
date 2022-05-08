@@ -5,6 +5,7 @@ import { GameTable } from '../components/playing/GameTable';
 import { useRecoilValue } from 'recoil';
 import { roundState } from '../modules/state';
 import { Information } from '../components/playing/Information';
+import { TigresModal } from '../components/playing/TigresModal';
 
 const Playing: React.FC = () => {
   const round = useRecoilValue(roundState);
@@ -29,6 +30,7 @@ const Playing: React.FC = () => {
           <Information sum />
         </Flex>
         <Hand />
+        <TigresModal />
       </VStack>
     </>
   );

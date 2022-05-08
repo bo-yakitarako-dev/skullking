@@ -23,6 +23,7 @@ export type CardType = {
 type Props = {
   card: CardType;
   invalid?: boolean;
+  hasMore?: boolean;
   onClick?: () => void;
 };
 
@@ -43,7 +44,12 @@ const gradientBackground: { [key in Color]?: [string, string] } = {
   tigres: ['red.400', 'blue.400'],
 };
 
-const Card: React.FC<Props> = ({ card, invalid = false, onClick }) => {
+const Card: React.FC<Props> = ({
+  card,
+  invalid = false,
+  hasMore = false,
+  onClick,
+}) => {
   const { color } = card;
   const number = convertToNumber(card);
   const gradient = gradientBackground[color];
@@ -98,6 +104,30 @@ const Card: React.FC<Props> = ({ card, invalid = false, onClick }) => {
           src={`/images/card/${color}.png`}
           filter="drop-shadow(0px 0px 2px white)"
         />
+      )}
+      {hasMore && card.color === 'tigres' && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          position="absolute"
+          width="60px"
+          height="70px"
+          borderRadius="60px"
+          left="50%"
+          transform="translateX(-50%)"
+          top="-60px"
+          backgroundColor="white"
+          _before={{
+            content: '""',
+            position: 'absolute',
+            top: 'calc(100% - 2px)',
+            border: '8px solid transparent',
+            borderTop: '8px solid white',
+          }}
+        >
+          <Image alt="tigresType" src="/images/card/escape.png" width="40px" />
+        </Box>
       )}
     </Box>
   );

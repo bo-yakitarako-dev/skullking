@@ -1,10 +1,11 @@
 import { useCallback } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { post } from '../../../modules/http';
 import {
   includeColorInHandSelector,
   playerIdState,
   tableCardsState,
+  tigresCardIdState,
   turnPlayerSelector,
 } from '../../../modules/state';
 import { CardType } from '../../common/Card';
@@ -14,14 +15,19 @@ export const useHand = () => {
   const tableCards = useRecoilValue(tableCardsState);
   const includeColor = useRecoilValue(includeColorInHandSelector);
   const turnPlayer = useRecoilValue(turnPlayerSelector);
+  const setTigresCardId = useSetRecoilState(tigresCardIdState);
 
   const onClickCard = useCallback(
-    ({ cardId }: CardType) =>
+    ({ cardId, color }: CardType) =>
       () => {
+        if (color === 'tigres') {
+          setTigresCardId(cardId);
+          return;
+        }
         const params = { playerId, cardId };
         post('/api/useCard', params);
       },
-    [playerId],
+    [playerId, setTigresCardId],
   );
 
   const isValid = useCallback(

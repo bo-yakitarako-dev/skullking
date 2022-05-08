@@ -116,6 +116,11 @@ export const turnPlayerSelector = selector({
   },
 });
 
+export const tigresCardIdState = atom({
+  key: 'tigresCardIdState',
+  default: 0,
+});
+
 export const roundOverPlayersState = atom({
   key: 'roundOverPlayersState',
   default: [] as Player[],

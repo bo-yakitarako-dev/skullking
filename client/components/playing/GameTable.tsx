@@ -10,7 +10,7 @@ const GameTable: React.FC = () => {
     <Flex border="1px solid white" padding="8" borderRadius="16" gridGap="2">
       {players.map(({ playerId, name }, index) =>
         tableCards.length > index ? (
-          <Card key={playerId} card={tableCards[index]} />
+          <Card key={playerId} card={tableCards[index]} hasMore />
         ) : (
           <Flex
             key={playerId}
