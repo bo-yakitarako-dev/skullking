@@ -4,6 +4,7 @@ import { Server, Socket as _Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { createRegistryFunction, players } from './userRegistry/registry';
 import { gameFunction, round, state } from './mainGame/gameFunction';
+import { tableCards } from './cardDealing/deck';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PostReq<Body> = Request<any, any, Body>;
@@ -63,6 +64,7 @@ app.prepare().then(() => {
       console.log(`${infoHead} WebSocketサーバー接続!\x1b[0m`);
     }
     socket.emit('playerInfo', [...players.map((p) => p.infoJson())]);
+    socket.emit('tableCards', [...tableCards.map((c) => c.convertJson())]);
     socket.emit('startRound', round);
     socket.emit('gameStatus', state);
   });
