@@ -9,8 +9,9 @@ import {
   tableCards,
 } from '../cardDealing/deck';
 import { Player } from '../userRegistry/Player';
+import { Card } from '../cardDealing/card';
 
-//type MustColor = 'undefined' | 'black' | 'green' | 'yellow' | 'purple';
+let mustColor = 'undefined';
 
 type State =
   | 'ready'
@@ -73,6 +74,7 @@ export const gameFunction = (io: SocketIO) => {
     res.json({ ok: true });
   };
 
+  // eslint-disable-next-line complexity
   const useCard = (
     req: PostReq<{ playerId: number; cardId: number }>,
     res: Response,
@@ -87,15 +89,22 @@ export const gameFunction = (io: SocketIO) => {
         .json({ ok: false, message: 'そのIDのプレイヤーはおらんのじゃ' });
       return;
     }
-    tableCards.push(player.useCard(req.body.cardId));
+    const card: Card = player.useCard(req.body.cardId);
+    tableCards.push(card);
+    if (
+      mustColor === 'undefined' &&
+      card.getColor() === ('black' || 'green' || 'yellow' || 'purple')
+    ) {
+      mustColor = card.getColor();
+    }
 
     let sendedPlayers = false;
     if (tableCards.length === players.length) {
       const winnerIndex = battle();
-      io.emit('winner', players[winnerIndex].infoJson());
-      players[winnerIndex].win();
-      sort(winnerIndex);
+      io.emit('winner', players[winnerIndex]?.infoJson() ?? null);
+      winAndSort(winnerIndex);
       discardTheCards();
+      mustColor = 'undefined';
       if (players[players.length - 1].getHand().length === 0) {
         const roundOverPlayers = calcScore();
         if (round === 10) {
@@ -117,6 +126,7 @@ export const gameFunction = (io: SocketIO) => {
     }
     io.emit('gameStatus', state);
     io.emit('tableCards', [...tableCards.map((p) => p.convertJson())]);
+    io.emit('mustColor', mustColor);
     res.json({ ok: true });
   };
 
@@ -135,9 +145,44 @@ const startRound = () => {
   }
 };
 
+const winAndSort = (winnerIndex: number) => {
+  if (winnerIndex < 0) {
+    sort(winnerIndex + players.length);
+  } else {
+    players[winnerIndex].win();
+    sort(winnerIndex);
+  }
+};
+
 const battle = () => {
-  //const mustColor: MustColor = 'undefined';
-  return 1;
+  let winnerIndex = 0;
+  if (
+    tableCards.some((card) => card.getColor() === 'pirates') &&
+    tableCards.some((card) => card.getColor() === 'mermaid') &&
+    !tableCards.some((card) => card.getColor() === 'skullking')
+  ) {
+    winnerIndex = tableCards.findIndex((card) => card.getColor() === 'pirates');
+  } else {
+    for (let i = 1; i < players.length; i++) {
+      let a = tableCards[winnerIndex].getStrength();
+      let b = tableCards[i].getStrength();
+      if (tableCards[winnerIndex].getColor() !== mustColor) {
+        a = 0;
+      }
+      if (tableCards[i].getColor() !== mustColor) {
+        b = 0;
+      }
+      if (a < b) {
+        winnerIndex = i;
+      }
+    }
+  }
+
+  if (tableCards.some((card) => card.getColor() === 'kraken')) {
+    return winnerIndex - players.length;
+  } else {
+    return winnerIndex;
+  }
 };
 
 const calcScore = () => {
