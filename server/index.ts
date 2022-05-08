@@ -64,9 +64,7 @@ app.prepare().then(() => {
     }
     socket.emit('playerInfo', [...players.map((p) => p.infoJson())]);
     socket.emit('startRound', round);
-    if (state === 'playing') {
-      socket.emit('nowPlaying');
-    }
+    socket.emit('gameStatus', state);
   });
 
   // これ以降はクライアント側のルーティング

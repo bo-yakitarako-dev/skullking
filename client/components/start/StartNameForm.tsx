@@ -5,7 +5,12 @@ import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { post } from '../../modules/http';
-import { nameState, playerIdState, playersState } from '../../modules/state';
+import {
+  gameStatusState,
+  nameState,
+  playerIdState,
+  playersState,
+} from '../../modules/state';
 
 type NameForm = {
   name: string;
@@ -16,6 +21,7 @@ type Props = {
 };
 
 const StartNameForm: React.FC<Props> = ({ setCanEdit }) => {
+  const status = useRecoilValue(gameStatusState);
   const [value, setStoreName] = useRecoilState(nameState);
   const [playerId, setStorePlayerId] = useRecoilState(playerIdState);
   const players = useRecoilValue(playersState);
@@ -47,7 +53,7 @@ const StartNameForm: React.FC<Props> = ({ setCanEdit }) => {
     return '　'; // 文字無いとDOMの高さ変わっちゃってブレるのでなんか書いとけ
   }, [errors.name]);
 
-  const isValidName = typeof errors.name === 'undefined';
+  const isValidName = typeof errors.name === 'undefined' && status === 'ready';
 
   const onSubmit: SubmitHandler<NameForm> = async ({ name }) => {
     const player = players.find((p) => p.playerId === playerId);
@@ -83,6 +89,7 @@ const StartNameForm: React.FC<Props> = ({ setCanEdit }) => {
             color="white"
             width="52"
             maxWidth="52"
+            disabled={status !== 'ready'}
           />
           <Text
             color="red.400"

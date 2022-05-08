@@ -5,10 +5,7 @@ import { RecoilRoot } from 'recoil';
 import { SocketProvider } from '../components/SocketProvider';
 import { InvalidSP } from '../components/InvalidSP';
 import { PlayerIdProvider } from '../components/PlayerIdProvider';
-import { StartSlider } from '../components/slider/StartSlider';
-import { PredictionSlider } from '../components/slider/PredictionSlider';
-import { RoundOverSlider } from '../components/slider/RoundOverSlider';
-import { ResultSlider } from '../components/slider/ResultSlider';
+import { Sliders } from '../components/slider/Sliders';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -24,10 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
               backgroundColor="gray.900"
             >
               <Component {...pageProps} />
-              <StartSlider />
-              <PredictionSlider />
-              <RoundOverSlider />
-              <ResultSlider />
+              <Sliders />
             </Box>
           </PlayerIdProvider>
         </SocketProvider>

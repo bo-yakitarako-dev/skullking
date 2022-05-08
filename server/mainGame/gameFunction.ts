@@ -48,6 +48,7 @@ export const gameFunction = (io: SocketIO) => {
     resetRegistry();
     addAndShuffle();
     io.emit('finishGame');
+    io.emit('gameStatus', state);
     sendInfo();
     res.json({ ok: true });
   };
