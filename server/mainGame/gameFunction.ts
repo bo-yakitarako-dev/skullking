@@ -74,6 +74,7 @@ export const gameFunction = (io: SocketIO) => {
     res.json({ ok: true });
   };
 
+  // eslint-disable-next-line complexity
   const useCard = (
     req: PostReq<{ playerId: number; cardId: number }>,
     res: Response,
@@ -100,7 +101,7 @@ export const gameFunction = (io: SocketIO) => {
     let sendedPlayers = false;
     if (tableCards.length === players.length) {
       const winnerIndex = battle();
-      io.emit('winner', players[winnerIndex].infoJson());
+      io.emit('winner', players[winnerIndex]?.infoJson() ?? null);
       winAndSort(winnerIndex);
       discardTheCards();
       mustColor = 'undefined';
