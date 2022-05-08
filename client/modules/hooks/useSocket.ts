@@ -46,11 +46,13 @@ export const useSocket = () => {
     socket.on('tableCards', (cards: CardType[]) => {
       setTableCards(cards);
     });
-    socket.on('winner', (winner: Player) => {
+    socket.on('winner', (winner: Player | null) => {
       toast({
-        title: `${winner.name} の勝ち！`,
-        description: '次はおめぇからじゃい！',
-        status: 'success',
+        title: winner ? `${winner.name} の勝ち！` : 'ばこーん',
+        description: winner
+          ? `次は${winner.name}くんからだね`
+          : 'くらーけんに襲われちゃったね...',
+        status: winner ? 'success' : 'warning',
         duration: 5000,
         isClosable: true,
         position: 'top',
