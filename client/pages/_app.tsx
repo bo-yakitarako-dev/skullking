@@ -24,11 +24,11 @@ export default function App({ Component, pageProps }: AppProps) {
               backgroundColor="gray.900"
             >
               <Component {...pageProps} />
+              <StartSlider />
+              <PredictionSlider />
+              <RoundOverSlider />
+              <ResultSlider />
             </Box>
-            <StartSlider />
-            <PredictionSlider />
-            <RoundOverSlider />
-            <ResultSlider />
           </PlayerIdProvider>
         </SocketProvider>
       </ChakraProvider>
