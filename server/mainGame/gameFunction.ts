@@ -45,8 +45,10 @@ export const gameFunction = (io: SocketIO) => {
     round = 0;
     resetRegistry();
     addAndShuffle();
+    discardTheCards();
     io.emit('finishGame');
     io.emit('gameStatus', state);
+    io.emit('tableCards', []);
     sendInfo();
     res.json({ ok: true });
   };
