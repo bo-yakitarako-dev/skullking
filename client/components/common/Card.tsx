@@ -18,6 +18,7 @@ export type CardType = {
   cardId: number;
   color: Color;
   strength: number;
+  tigresType?: 'pirates' | 'escape';
 };
 
 type Props = {
@@ -105,7 +106,7 @@ const Card: React.FC<Props> = ({
           filter="drop-shadow(0px 0px 2px white)"
         />
       )}
-      {hasMore && card.color === 'tigres' && (
+      {hasMore && card.tigresType !== undefined && (
         <Box
           display="flex"
           justifyContent="center"
@@ -126,7 +127,11 @@ const Card: React.FC<Props> = ({
             borderTop: '8px solid white',
           }}
         >
-          <Image alt="tigresType" src="/images/card/escape.png" width="40px" />
+          <Image
+            alt="tigresType"
+            src={`/images/card/${card.tigresType}.png`}
+            width="40px"
+          />
         </Box>
       )}
     </Box>

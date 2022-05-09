@@ -17,7 +17,7 @@ import { playerIdState, tigresCardIdState } from '../../modules/state';
 
 const TigresModal: React.FC = () => {
   const playerId = useRecoilValue(playerIdState);
-  const [cardType, setCardType] = useState<'pirates' | 'escape'>('pirates');
+  const [tigresType, setCardType] = useState<'pirates' | 'escape'>('pirates');
   const [cardId, setTigresCardId] = useRecoilState(tigresCardIdState);
 
   const onClose = useCallback(() => setTigresCardId(0), []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -26,9 +26,9 @@ const TigresModal: React.FC = () => {
   }, []);
 
   const onSubmit = useCallback(() => {
-    post('/api/useCard', { playerId, cardId });
+    post('/api/useCard', { playerId, cardId, tigresType });
     onClose();
-  }, [playerId, cardId, onClose]);
+  }, [playerId, cardId, tigresType, onClose]);
 
   return (
     <Modal isOpen={cardId !== 0} onClose={onClose} isCentered>
@@ -37,7 +37,7 @@ const TigresModal: React.FC = () => {
         <ModalHeader>てぃぐれすの選択</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <RadioGroup onChange={onChange} value={cardType}>
+          <RadioGroup onChange={onChange} value={tigresType}>
             <Box>
               <Radio value="pirates" size="lg" marginBottom="2">
                 海賊
