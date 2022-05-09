@@ -106,8 +106,8 @@ export const gameFunction = (io: SocketIO) => {
     if (tableCards.length === players.length) {
       const winnerIndex = battle();
       io.emit('winner', players[winnerIndex]?.infoJson() ?? null);
-      players[winnerIndex].plusBonus(check14Bonus());
-      players[winnerIndex].plusBonus(checckDefeatBonus());
+      players[winnerIndex]?.plusBonus(check14Bonus());
+      players[winnerIndex]?.plusBonus(checckDefeatBonus());
       checkTreasureBonus(winnerIndex);
       winAndSort(winnerIndex);
       discardTheCards();
@@ -314,6 +314,9 @@ const checckDefeatBonus = () => {
 };
 
 const checkTreasureBonus = (winnerIndex: number) => {
+  if (winnerIndex < 0) {
+    return;
+  }
   for (let i = 0; i < tableCards.length; i++) {
     if (tableCards[i].getColor() === 'treasure') {
       treasureBonusMemory.push([
@@ -330,7 +333,7 @@ const determineTreasureBonus = () => {
       (player) => player.getId() === treasureBonusMemory[i][0],
     );
     const tIndex = players.findIndex(
-      (player) => player.getId() === treasureBonusMemory[i][0],
+      (player) => player.getId() === treasureBonusMemory[i][1],
     );
     if (
       players[fIndex].getVictory() === players[fIndex].getPrediction() &&
