@@ -4,6 +4,7 @@ import { players, resetRegistry, sort } from '../userRegistry/registry';
 import {
   addAndShuffle,
   deck,
+  discard,
   discardTheCards,
   shuffle,
   tableCards,
@@ -20,6 +21,8 @@ type State =
   | 'result';
 export let state: State = 'ready';
 export let round = 0;
+let treasureBonusMemory: number[][] = [];
+let changedByTigres = 0;
 
 export const gameFunction = (io: SocketIO) => {
   const sendInfo = () => {
@@ -89,15 +92,35 @@ export const gameFunction = (io: SocketIO) => {
       return;
     }
     const card: Card = player.useCard(req.body.cardId);
-    tableCards.push(card);
+    if (card.getColor() === 'tigres') {
+      io.on('tigresChoice', (choice) => {
+        if (choice === 1) {
+          changedByTigres = 1;
+          discard.push(card);
+          tableCards.push(new Card('pirates', 29));
+        } else {
+          tableCards.push(card);
+        }
+      });
+    } else {
+      tableCards.push(card);
+    }
 
     let sendedPlayers = false;
     if (tableCards.length === players.length) {
       const winnerIndex = battle();
       io.emit('winner', players[winnerIndex]?.infoJson() ?? null);
+      players[winnerIndex].plusBonus(check14Bonus());
+      players[winnerIndex].plusBonus(checckDefeatBonus());
+      checkTreasureBonus(winnerIndex);
       winAndSort(winnerIndex);
+      if (changedByTigres === 1) {
+        tableCards.filter((card) => card.getId() === card.getSum());
+        changedByTigres = 0;
+      }
       discardTheCards();
       if (players[players.length - 1].getHand().length === 0) {
+        determineTreasureBonus();
         const roundOverPlayers = calcScore();
         if (round === 10) {
           state = 'result';
@@ -126,6 +149,7 @@ export const gameFunction = (io: SocketIO) => {
 
 const startRound = () => {
   round++;
+  treasureBonusMemory = [];
   if (deck.length < players.length * round) {
     addAndShuffle();
   }
@@ -203,6 +227,85 @@ export const battle = () => {
   }
 };
 
+const check14Bonus = () => {
+  let bonus = 0;
+  if (
+    tableCards.some(
+      (card) => card.getColor() === 'black' && card.getStrength() === 14,
+    )
+  ) {
+    bonus += 20;
+  }
+  if (
+    tableCards.some(
+      (card) => card.getColor() === 'green' && card.getStrength() === 14,
+    )
+  ) {
+    bonus += 10;
+  }
+  if (
+    tableCards.some(
+      (card) => card.getColor() === 'yellow' && card.getStrength() === 14,
+    )
+  ) {
+    bonus += 10;
+  }
+  if (
+    tableCards.some(
+      (card) => card.getColor() === 'purple' && card.getStrength() === 14,
+    )
+  ) {
+    bonus += 10;
+  }
+  return bonus;
+};
+
+const checckDefeatBonus = () => {
+  if (
+    tableCards.some((card) => card.getColor() === 'skullking') &&
+    tableCards.some((card) => card.getColor() === 'mermaid')
+  ) {
+    return 50;
+  } else if (
+    tableCards.some((card) => card.getColor() === 'pirates') &&
+    tableCards.some((card) => card.getColor() === 'skullking') &&
+    !tableCards.some((card) => card.getColor() === 'mermaid')
+  ) {
+    return 30;
+  } else {
+    return 0;
+  }
+};
+
+const checkTreasureBonus = (winnerIndex: number) => {
+  for (let i = 0; i < tableCards.length; i++) {
+    if (tableCards[i].getColor() === 'treasure') {
+      treasureBonusMemory.push([
+        players[i].getId(),
+        players[winnerIndex].getId(),
+      ]);
+    }
+  }
+};
+
+const determineTreasureBonus = () => {
+  for (let i = 0; i < treasureBonusMemory.length; i++) {
+    const fIndex = players.findIndex(
+      (player) => player.getId() === treasureBonusMemory[i][0],
+    );
+    const tIndex = players.findIndex(
+      (player) => player.getId() === treasureBonusMemory[i][0],
+    );
+    if (
+      players[fIndex].getVictory() === players[fIndex].getPrediction() &&
+      players[tIndex].getVictory() === players[tIndex].getPrediction()
+    ) {
+      players[fIndex].plusBonus(20);
+      players[tIndex].plusBonus(20);
+    }
+  }
+};
+
 const calcScore = () => {
   const resultPlayers: Player[] = [];
   for (let i = 0; i < players.length; i++) {
@@ -210,7 +313,7 @@ const calcScore = () => {
       if (players[i].getPrediction() !== players[i].getVictory()) {
         players[i].writeScore(-10 * round);
       } else {
-        players[i].writeScore(10 * round);
+        players[i].writeScore(10 * round + players[i].getBonus());
       }
     } else {
       if (players[i].getPrediction() !== players[i].getVictory()) {
@@ -218,7 +321,9 @@ const calcScore = () => {
           -10 * Math.abs(players[i].getPrediction() - players[i].getVictory()),
         );
       } else {
-        players[i].writeScore(20 * players[i].getPrediction());
+        players[i].writeScore(
+          20 * players[i].getPrediction() + players[i].getBonus(),
+        );
       }
     }
     resultPlayers.push(players[i].clone());

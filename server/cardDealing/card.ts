@@ -35,6 +35,10 @@ export class Card {
     return this.strength;
   }
 
+  public getSum() {
+    return Card.sum;
+  }
+
   public convertJson() {
     const { cardId, color, strength } = this;
     return { cardId, color, strength };

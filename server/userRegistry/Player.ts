@@ -51,10 +51,19 @@ export class Player {
   public resetPlaying() {
     this.prediction = -1;
     this.victory = 0;
+    this.bonus = 0;
   }
 
   public win() {
     this.victory++;
+  }
+
+  public plusBonus(bonus: number) {
+    this.bonus += bonus;
+  }
+
+  public getBonus() {
+    return this.bonus;
   }
 
   public writeScore(score: number) {
