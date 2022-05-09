@@ -44,6 +44,10 @@ export class Card {
     this.tigresType = type;
   }
 
+  public getTigresType() {
+    return this.tigresType;
+  }
+
   public convertJson() {
     const { cardId, color, strength, tigresType } = this;
     return { cardId, color, strength, tigresType };

@@ -169,6 +169,15 @@ const toZeroOr = (i: number, strength: number, mustColor: string) => {
       strength = 0;
     }
   }
+  if (tableCards.some((card) => card.getColor() === 'tigres')) {
+    if (
+      tableCards[
+        tableCards.findIndex((card) => card.getColor() === 'tigres')
+      ].getTigresType() === 'pirates'
+    ) {
+      strength = 29;
+    }
+  }
   return strength;
 };
 
@@ -188,10 +197,7 @@ const defineMustColor = (mustColor: string) => {
   return mustColor;
 };
 
-export const battle = () => {
-  let winnerIndex = 0;
-  let mustColor = 'undefined';
-  mustColor = defineMustColor(mustColor);
+const batleOnTigresEscape = (winnerIndex: number, mustColor: string) => {
   if (
     tableCards.some((card) => card.getColor() === 'pirates') &&
     tableCards.some((card) => card.getColor() === 'mermaid') &&
@@ -209,6 +215,44 @@ export const battle = () => {
         winnerIndex = i;
       }
     }
+  }
+  return winnerIndex;
+};
+
+export const battle = () => {
+  let winnerIndex = 0;
+  let mustColor = 'undefined';
+  mustColor = defineMustColor(mustColor);
+  if (tableCards.some((card) => card.getColor() === 'tigres')) {
+    if (
+      tableCards[
+        tableCards.findIndex((card) => card.getColor() === 'tigres')
+      ].getTigresType() === 'pirates'
+    ) {
+      if (
+        tableCards.some((card) => card.getColor() === 'mermaid') &&
+        !tableCards.some((card) => card.getColor() === 'skullking')
+      ) {
+        winnerIndex = tableCards.findIndex(
+          (card) => card.getColor() === 'tigres',
+        );
+      } else {
+        for (let i = 1; i < tableCards.length; i++) {
+          let a = tableCards[winnerIndex].getStrength();
+          let b = tableCards[i].getStrength();
+          a = toZeroOr(winnerIndex, a, mustColor);
+          b = toZeroOr(i, b, mustColor);
+
+          if (a < b) {
+            winnerIndex = i;
+          }
+        }
+      }
+    } else {
+      winnerIndex = batleOnTigresEscape(winnerIndex, mustColor);
+    }
+  } else {
+    winnerIndex = batleOnTigresEscape(winnerIndex, mustColor);
   }
   if (tableCards.some((card) => card.getColor() === 'kraken')) {
     return winnerIndex - tableCards.length;
