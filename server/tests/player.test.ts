@@ -1,30 +1,17 @@
-import { Player } from '../userRegistry/Player';
-import { players, sort } from '../userRegistry/registry';
+import { Card } from '../cardDealing/card';
+import { tableCards } from '../cardDealing/deck';
+import { battle } from '../mainGame/gameFunction';
 
-const taro = new Player(0, 'Taro');
-const jiro = new Player(1, 'Jiro');
-const shiro = new Player(2, 'Shiro');
-const kiyoshi = new Player(3, 'Kiyoshi');
+const card1 = new Card('green', 3);
+const card2 = new Card('pirates', 29);
+const card3 = new Card('mermaid', 31);
+const card4 = new Card('kraken', 0);
 
-players.push(taro);
-players.push(jiro);
-players.push(shiro);
-players.push(kiyoshi);
+tableCards.push(card1);
+tableCards.push(card2);
+tableCards.push(card3);
+tableCards.push(card4);
 
-sort(2);
-
-test('test', () => {
-  expect(players[0].getId()).toBe(2);
-});
-
-test('test2', () => {
-  expect(players[1].getId()).toBe(3);
-});
-
-test('test3', () => {
-  expect(players[2].getId()).toBe(0);
-});
-
-test('test4', () => {
-  expect(players[3].getId()).toBe(1);
+test('test_new', () => {
+  expect(battle()).toBe(-3);
 });

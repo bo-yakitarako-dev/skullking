@@ -6,12 +6,14 @@ export class Player {
   private victory: number;
   private hand: Card[] = [];
   private scores: number[] = [];
+  private bonus: number;
 
   constructor(playerId: number, name: string) {
     this.playerId = playerId;
     this.name = name;
     this.prediction = -1; //未定は-1とする
     this.victory = 0;
+    this.bonus = 0;
   }
 
   public isPlayerId(playerId: number) {

@@ -11,8 +11,6 @@ import {
 import { Player } from '../userRegistry/Player';
 import { Card } from '../cardDealing/card';
 
-let mustColor = 'undefined';
-
 type State =
   | 'ready'
   | 'start'
@@ -92,12 +90,6 @@ export const gameFunction = (io: SocketIO) => {
     }
     const card: Card = player.useCard(req.body.cardId);
     tableCards.push(card);
-    if (
-      mustColor === 'undefined' &&
-      card.getColor() === ('black' || 'green' || 'yellow' || 'purple')
-    ) {
-      mustColor = card.getColor();
-    }
 
     let sendedPlayers = false;
     if (tableCards.length === players.length) {
@@ -105,7 +97,6 @@ export const gameFunction = (io: SocketIO) => {
       io.emit('winner', players[winnerIndex]?.infoJson() ?? null);
       winAndSort(winnerIndex);
       discardTheCards();
-      mustColor = 'undefined';
       if (players[players.length - 1].getHand().length === 0) {
         const roundOverPlayers = calcScore();
         if (round === 10) {
@@ -127,7 +118,6 @@ export const gameFunction = (io: SocketIO) => {
     }
     io.emit('gameStatus', state);
     io.emit('tableCards', [...tableCards.map((p) => p.convertJson())]);
-    io.emit('mustColor', mustColor);
     res.json({ ok: true });
   };
 
@@ -155,8 +145,39 @@ const winAndSort = (winnerIndex: number) => {
   }
 };
 
-const battle = () => {
+const toZeroOr = (i: number, strength: number, mustColor: string) => {
+  if (tableCards[i].getColor() !== mustColor) {
+    if (
+      tableCards[i].getColor() === 'green' ||
+      tableCards[i].getColor() === 'yellow' ||
+      tableCards[i].getColor() === 'purple'
+    ) {
+      strength = 0;
+    }
+  }
+  return strength;
+};
+
+const defineMustColor = (mustColor: string) => {
+  for (let i = 0; i < tableCards.length; i++) {
+    if (mustColor === 'undefined') {
+      if (
+        tableCards[i].getColor() === 'black' ||
+        tableCards[i].getColor() === 'green' ||
+        tableCards[i].getColor() === 'yellow' ||
+        tableCards[i].getColor() === 'purple'
+      ) {
+        mustColor = tableCards[i].getColor();
+      }
+    }
+  }
+  return mustColor;
+};
+
+export const battle = () => {
   let winnerIndex = 0;
+  let mustColor = 'undefined';
+  mustColor = defineMustColor(mustColor);
   if (
     tableCards.some((card) => card.getColor() === 'pirates') &&
     tableCards.some((card) => card.getColor() === 'mermaid') &&
@@ -164,23 +185,19 @@ const battle = () => {
   ) {
     winnerIndex = tableCards.findIndex((card) => card.getColor() === 'pirates');
   } else {
-    for (let i = 1; i < players.length; i++) {
+    for (let i = 1; i < tableCards.length; i++) {
       let a = tableCards[winnerIndex].getStrength();
       let b = tableCards[i].getStrength();
-      if (tableCards[winnerIndex].getColor() !== mustColor) {
-        a = 0;
-      }
-      if (tableCards[i].getColor() !== mustColor) {
-        b = 0;
-      }
+      a = toZeroOr(winnerIndex, a, mustColor);
+      b = toZeroOr(i, b, mustColor);
+
       if (a < b) {
         winnerIndex = i;
       }
     }
   }
-
   if (tableCards.some((card) => card.getColor() === 'kraken')) {
-    return winnerIndex - players.length;
+    return winnerIndex - tableCards.length;
   } else {
     return winnerIndex;
   }
