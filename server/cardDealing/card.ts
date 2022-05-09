@@ -15,6 +15,7 @@ export class Card {
   private cardId: number;
   private color: Color;
   private strength: number;
+  private tigresType?: 'pirates' | 'escape';
 
   constructor(color: Color, strength: number) {
     Card.sum++;
@@ -39,8 +40,12 @@ export class Card {
     return Card.sum;
   }
 
+  public setTigresType(type: 'pirates' | 'escape') {
+    this.tigresType = type;
+  }
+
   public convertJson() {
-    const { cardId, color, strength } = this;
-    return { cardId, color, strength };
+    const { cardId, color, strength, tigresType } = this;
+    return { cardId, color, strength, tigresType };
   }
 }

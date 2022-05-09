@@ -4,7 +4,6 @@ import { players, resetRegistry, sort } from '../userRegistry/registry';
 import {
   addAndShuffle,
   deck,
-  discard,
   discardTheCards,
   shuffle,
   tableCards,
@@ -22,7 +21,6 @@ type State =
 export let state: State = 'ready';
 export let round = 0;
 let treasureBonusMemory: number[][] = [];
-let changedByTigres = 0;
 
 export const gameFunction = (io: SocketIO) => {
   const sendInfo = () => {
@@ -78,7 +76,11 @@ export const gameFunction = (io: SocketIO) => {
 
   // eslint-disable-next-line complexity
   const useCard = (
-    req: PostReq<{ playerId: number; cardId: number }>,
+    req: PostReq<{
+      playerId: number;
+      cardId: number;
+      tigresType: 'pirates' | 'escape';
+    }>,
     res: Response,
   ) => {
     state = 'playing';
@@ -92,19 +94,11 @@ export const gameFunction = (io: SocketIO) => {
       return;
     }
     const card: Card = player.useCard(req.body.cardId);
-    if (card.getColor() === 'tigres') {
-      io.on('tigresChoice', (choice) => {
-        if (choice === 1) {
-          changedByTigres = 1;
-          discard.push(card);
-          tableCards.push(new Card('pirates', 29));
-        } else {
-          tableCards.push(card);
-        }
-      });
-    } else {
-      tableCards.push(card);
+    const { tigresType } = req.body;
+    if (tigresType !== undefined) {
+      card.setTigresType(tigresType);
     }
+    tableCards.push(card);
 
     let sendedPlayers = false;
     if (tableCards.length === players.length) {
@@ -114,10 +108,6 @@ export const gameFunction = (io: SocketIO) => {
       players[winnerIndex].plusBonus(checckDefeatBonus());
       checkTreasureBonus(winnerIndex);
       winAndSort(winnerIndex);
-      if (changedByTigres === 1) {
-        tableCards.filter((card) => card.getId() === card.getSum());
-        changedByTigres = 0;
-      }
       discardTheCards();
       if (players[players.length - 1].getHand().length === 0) {
         determineTreasureBonus();
