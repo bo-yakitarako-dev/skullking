@@ -104,33 +104,38 @@ export const gameFunction = (io: SocketIO) => {
 
     let sendedPlayers = false;
     if (tableCards.length === players.length) {
-      const winnerIndex = battle();
-      io.emit('winner', players[winnerIndex]?.infoJson() ?? null);
-      players[winnerIndex]?.plusBonus(check14Bonus());
-      players[winnerIndex]?.plusBonus(checckDefeatBonus());
-      checkTreasureBonus(winnerIndex);
-      winAndSort(winnerIndex);
-      discardTheCards();
-      if (players[players.length - 1].getHand().length === 0) {
-        determineTreasureBonus();
-        const roundOverPlayers = calcScore();
-        if (round === 10) {
-          state = 'result';
-        } else {
-          sendedPlayers = true;
-          state = 'predicting';
-          startRound();
-          io.emit('startRound', round);
-          io.emit('roundOverPlayers', roundOverPlayers);
-          setTimeout(() => {
-            sendInfo();
-          }, 3000);
+      setTimeout(() => {
+        const winnerIndex = battle();
+        io.emit('winner', players[winnerIndex]?.infoJson() ?? null);
+        players[winnerIndex]?.plusBonus(check14Bonus());
+        players[winnerIndex]?.plusBonus(checckDefeatBonus());
+        checkTreasureBonus(winnerIndex);
+        winAndSort(winnerIndex);
+        discardTheCards();
+        if (players[players.length - 1].getHand().length === 0) {
+          determineTreasureBonus();
+          const roundOverPlayers = calcScore();
+          if (round === 10) {
+            state = 'result';
+          } else {
+            sendedPlayers = true;
+            state = 'predicting';
+            startRound();
+            io.emit('startRound', round);
+            io.emit('roundOverPlayers', roundOverPlayers);
+            setTimeout(() => {
+              sendInfo();
+            }, 3000);
+          }
         }
-      }
+        if (!sendedPlayers) {
+          sendInfo();
+        }
+        io.emit('gameStatus', state);
+        io.emit('tableCards', []);
+      }, 3000);
     }
-    if (!sendedPlayers) {
-      sendInfo();
-    }
+    sendInfo();
     io.emit('gameStatus', state);
     io.emit('tableCards', [...tableCards.map((p) => p.convertJson())]);
     res.json({ ok: true });
