@@ -9,7 +9,7 @@ import {
   tableCards,
 } from '../cardDealing/deck';
 import { Player } from '../userRegistry/Player';
-import { Card } from '../cardDealing/card';
+import { Card, Color } from '../cardDealing/card';
 
 type State =
   | 'ready'
@@ -166,30 +166,16 @@ const winAndSort = (winnerIndex: number) => {
   }
 };
 
-const toZeroOr = (
-  i: number,
-  strength: number,
-  mustColor: string | undefined,
-) => {
-  if (tableCards[i].getColor() !== mustColor) {
-    if (
-      tableCards[i].getColor() === 'green' ||
-      tableCards[i].getColor() === 'yellow' ||
-      tableCards[i].getColor() === 'purple'
-    ) {
-      strength = 0;
-    }
+const parseStrength = (i: number, mustColor: Color | undefined) => {
+  const card = tableCards[i];
+  const color = card.getColor();
+  if (color !== mustColor && ['green', 'yellow', 'puuple'].includes(color)) {
+    return 0;
   }
-  if (tableCards.some((card) => card.getColor() === 'tigres')) {
-    if (
-      tableCards[
-        tableCards.findIndex((card) => card.getColor() === 'tigres')
-      ].getTigresType() === 'pirates'
-    ) {
-      strength = 29;
-    }
+  if (color === 'tigres' && card.getTigresType() === 'pirates') {
+    return 29;
   }
-  return strength;
+  return card.getStrength();
 };
 
 export const defineMustColor = () => {
@@ -201,29 +187,19 @@ export const defineMustColor = () => {
   return undefined;
 };
 
-const batleOnTigresEscape = (
-  winnerIndex: number,
-  mustColor: string | undefined,
-) => {
+const batleOnTigresEscape = (mustColor: Color | undefined) => {
   if (
     tableCards.some((card) => card.getColor() === 'pirates') &&
     tableCards.some((card) => card.getColor() === 'mermaid') &&
     !tableCards.some((card) => card.getColor() === 'skullking')
   ) {
-    winnerIndex = tableCards.findIndex((card) => card.getColor() === 'pirates');
-  } else {
-    for (let i = 1; i < tableCards.length; i++) {
-      let a = tableCards[winnerIndex].getStrength();
-      let b = tableCards[i].getStrength();
-      a = toZeroOr(winnerIndex, a, mustColor);
-      b = toZeroOr(i, b, mustColor);
-
-      if (a < b) {
-        winnerIndex = i;
-      }
-    }
+    return tableCards.findIndex((card) => card.getColor() === 'pirates');
   }
-  return winnerIndex;
+  return tableCards.reduce((preWinnerIndex, card, index) => {
+    const preWinnerStrength = parseStrength(preWinnerIndex, mustColor);
+    const currentStrength = parseStrength(index, mustColor);
+    return preWinnerStrength < currentStrength ? index : preWinnerIndex;
+  }, 0);
 };
 
 export const battle = () => {
@@ -241,22 +217,17 @@ export const battle = () => {
       ) {
         winnerIndex = tigresIndex;
       } else {
-        for (let i = 1; i < tableCards.length; i++) {
-          let a = tableCards[winnerIndex].getStrength();
-          let b = tableCards[i].getStrength();
-          a = toZeroOr(winnerIndex, a, mustColor);
-          b = toZeroOr(i, b, mustColor);
-
-          if (a < b) {
-            winnerIndex = i;
-          }
-        }
+        winnerIndex = tableCards.reduce((preWinnerIndex, card, index) => {
+          const preWinnerStrength = parseStrength(preWinnerIndex, mustColor);
+          const currentStrength = parseStrength(index, mustColor);
+          return preWinnerStrength < currentStrength ? index : preWinnerIndex;
+        }, 0);
       }
     } else {
-      winnerIndex = batleOnTigresEscape(winnerIndex, mustColor);
+      winnerIndex = batleOnTigresEscape(mustColor);
     }
   } else {
-    winnerIndex = batleOnTigresEscape(winnerIndex, mustColor);
+    winnerIndex = batleOnTigresEscape(mustColor);
   }
   if (tableCards.some((card) => card.getColor() === 'kraken')) {
     return winnerIndex - tableCards.length;

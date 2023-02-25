@@ -16,6 +16,16 @@ const setTableCards = (cards: Card[]) => {
 
 describe.each<TestBattle>([
   [[new Card('black', 1), new Card('green', 13)], 0, '黒がかつ'],
+  [[new Card('pirates', 29), new Card('mermaid', 31)], 0, '海賊なんだよね'],
+  [
+    [
+      new Card('pirates', 29),
+      new Card('mermaid', 31),
+      new Card('skullking', 30),
+    ],
+    1,
+    'マーメイドなんだよね',
+  ],
   [[new Card('black', 1), new Card('green', 14)], 0, '黒勝っちゃうよね'],
   [
     [new Card('black', 1), tigresPirates, new Card('green', 13)],
@@ -51,6 +61,16 @@ describe.each<TestBattle>([
     [new Card('green', 1), tigresEscape, new Card('green', 13)],
     2,
     'ティグレス逃げるよまたね',
+  ],
+  [
+    [
+      new Card('escape', 0),
+      tigresEscape,
+      new Card('treasure', 0),
+      new Card('escape', 0),
+    ],
+    0,
+    '全員逃げたら',
   ],
 ])('すごいテスト', (cards: Card[], answerIndex: number, testName) => {
   test(testName, () => {
