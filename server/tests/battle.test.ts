@@ -16,6 +16,7 @@ const setTableCards = (cards: Card[]) => {
 
 describe.each<TestBattle>([
   [[new Card('black', 1), new Card('green', 13)], 0, '黒がかつ'],
+  [[new Card('green', 1), new Card('purple', 7)], 0, '色はしょうがない'],
   [[new Card('pirates', 29), new Card('mermaid', 31)], 0, '海賊なんだよね'],
   [
     [

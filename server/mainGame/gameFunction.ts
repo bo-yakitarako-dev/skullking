@@ -169,7 +169,7 @@ const winAndSort = (winnerIndex: number) => {
 const parseStrength = (i: number, mustColor: Color | undefined) => {
   const card = tableCards[i];
   const color = card.getColor();
-  if (color !== mustColor && ['green', 'yellow', 'puuple'].includes(color)) {
+  if (color !== mustColor && ['green', 'yellow', 'purple'].includes(color)) {
     return 0;
   }
   if (color === 'tigres' && card.getTigresType() === 'pirates') {
