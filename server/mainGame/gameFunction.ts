@@ -166,7 +166,11 @@ const winAndSort = (winnerIndex: number) => {
   }
 };
 
-const toZeroOr = (i: number, strength: number, mustColor: string) => {
+const toZeroOr = (
+  i: number,
+  strength: number,
+  mustColor: string | undefined,
+) => {
   if (tableCards[i].getColor() !== mustColor) {
     if (
       tableCards[i].getColor() === 'green' ||
@@ -188,23 +192,19 @@ const toZeroOr = (i: number, strength: number, mustColor: string) => {
   return strength;
 };
 
-const defineMustColor = (mustColor: string) => {
-  for (let i = 0; i < tableCards.length; i++) {
-    if (mustColor === 'undefined') {
-      if (
-        tableCards[i].getColor() === 'black' ||
-        tableCards[i].getColor() === 'green' ||
-        tableCards[i].getColor() === 'yellow' ||
-        tableCards[i].getColor() === 'purple'
-      ) {
-        mustColor = tableCards[i].getColor();
-      }
+export const defineMustColor = () => {
+  for (const card of tableCards) {
+    if (['black', 'green', 'yellow', 'purple'].includes(card.getColor())) {
+      return card.getColor();
     }
   }
-  return mustColor;
+  return undefined;
 };
 
-const batleOnTigresEscape = (winnerIndex: number, mustColor: string) => {
+const batleOnTigresEscape = (
+  winnerIndex: number,
+  mustColor: string | undefined,
+) => {
   if (
     tableCards.some((card) => card.getColor() === 'pirates') &&
     tableCards.some((card) => card.getColor() === 'mermaid') &&
@@ -228,21 +228,18 @@ const batleOnTigresEscape = (winnerIndex: number, mustColor: string) => {
 
 export const battle = () => {
   let winnerIndex = 0;
-  let mustColor = 'undefined';
-  mustColor = defineMustColor(mustColor);
-  if (tableCards.some((card) => card.getColor() === 'tigres')) {
-    if (
-      tableCards[
-        tableCards.findIndex((card) => card.getColor() === 'tigres')
-      ].getTigresType() === 'pirates'
-    ) {
+  const mustColor = defineMustColor();
+  const tigresIndex = tableCards.findIndex(
+    (card) => card.getColor() === 'tigres',
+  );
+  const tigres = tableCards[tigresIndex];
+  if (tigres !== undefined) {
+    if (tigres.getTigresType() === 'pirates') {
       if (
         tableCards.some((card) => card.getColor() === 'mermaid') &&
         !tableCards.some((card) => card.getColor() === 'skullking')
       ) {
-        winnerIndex = tableCards.findIndex(
-          (card) => card.getColor() === 'tigres',
-        );
+        winnerIndex = tigresIndex;
       } else {
         for (let i = 1; i < tableCards.length; i++) {
           let a = tableCards[winnerIndex].getStrength();
