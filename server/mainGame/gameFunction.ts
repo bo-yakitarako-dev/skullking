@@ -215,7 +215,9 @@ export const battle = () => {
         tableCards.some((card) => card.getColor() === 'mermaid') &&
         !tableCards.some((card) => card.getColor() === 'skullking')
       ) {
-        winnerIndex = tigresIndex;
+        winnerIndex = tableCards.findIndex((card) =>
+          ['pirates', 'tigres'].includes(card.getColor()),
+        );
       } else {
         winnerIndex = tableCards.reduce((preWinnerIndex, card, index) => {
           const preWinnerStrength = parseStrength(preWinnerIndex, mustColor);

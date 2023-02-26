@@ -27,6 +27,11 @@ describe.each<TestBattle>([
     1,
     'マーメイドなんだよね',
   ],
+  [
+    [new Card('pirates', 29), tigresPirates, new Card('mermaid', 31)],
+    0,
+    'レアケースだよね',
+  ],
   [[new Card('black', 1), new Card('green', 14)], 0, '黒勝っちゃうよね'],
   [
     [new Card('black', 1), tigresPirates, new Card('green', 13)],
