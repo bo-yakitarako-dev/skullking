@@ -18,6 +18,7 @@
 /build
 /dist
 /.vscode/sftp.json
+/.vscode/settings.json
 
 # misc
 .DS_Store
